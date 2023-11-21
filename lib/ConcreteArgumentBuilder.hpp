@@ -57,17 +57,25 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
     return *this;
   }
 
-  ConcreteArgumentBuilder& AddValidate(bool (* validate)(char*)) {
+  ConcreteArgumentBuilder& AddValidate(bool (* validate)(std::string&)) {
     info_.Validate = validate;
     return *this;
   }
 
-  ConcreteArgumentBuilder& AddIsGood(bool (* is_good)(char*)) {
+  ConcreteArgumentBuilder& AddIsGood(bool (* is_good)(std::string&)) {
     info_.IsGood = is_good;
     return *this;
   }
 
   Argument* build() override {
+    if (std::is_same<T, bool>::value && !info_.has_default) {
+      info_.has_default = true;
+    }
+
+    if (info_.minimum_values == 0 && !info_.has_default) {
+      info_.minimum_values = 1;
+    }
+
     return new ConcreteArgument<T>(info_, default_value_, stored_value_, stored_values_);
   }
 

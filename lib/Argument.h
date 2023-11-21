@@ -38,8 +38,8 @@ struct ArgumentInformation {
   bool has_store_values = false;
   bool has_store_value = false;
   bool has_default = false;
-  bool (* Validate)(char*) = &AlwaysTrue;
-  bool (* IsGood)(char*) = &AlwaysTrue;
+  bool (* Validate)(std::string&) = &AlwaysTrue;
+  bool (* IsGood)(std::string&) = &AlwaysTrue;
 };
 
 class Argument {

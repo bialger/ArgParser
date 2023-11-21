@@ -1,7 +1,8 @@
 #include <iostream>
+#include <filesystem>
 #include "BasicFunctions.hpp"
 
-bool AlwaysTrue(char* str) {
+bool AlwaysTrue(std::string& str) {
   return true;
 }
 
@@ -43,6 +44,49 @@ bool IsWindows() {
       false
 #endif
       ;
+}
+
+bool IsValidFilename(std::string& pre_filename) {
+  if (pre_filename.size() > 7) {
+    if (pre_filename.substr(0, 7) == "file://") {
+      pre_filename = pre_filename.substr(7);
+    }
+  }
+
+  if (IsWindows() && pre_filename.size() > 2) {
+    for (uint64_t position = 2; position < pre_filename.size(); ++position) {
+      char current = pre_filename[position];
+      if (!(std::isalnum(current) || current == '\\' || current == '.' ||
+          current == '-' || current == ' ')) {
+        return false;
+      }
+    }
+  }
+
+  /* This Windows-specific check is important because different code pages can
+   * corrupt non-alphanumeric filenames, but UNIX-like systems (like MacOS or
+   * Linux) handle unicode correctly. */
+
+  for (uint64_t position = 0; position < pre_filename.size() - 1; ++position) {
+    char current = pre_filename[position];
+    char next = pre_filename[position + 1];
+
+    if ((current == '\\' || current == '/') && next == current) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool IsRegularFile(std::string& filename) {
+  std::filesystem::path path(filename);
+  return std::filesystem::is_regular_file(path);
+}
+
+bool IsDirectory(std::string& dirname) {
+  std::filesystem::path path(dirname);
+  return std::filesystem::is_directory(path);
 }
 
 /* The code provides dummy function definitions for Windows console-related

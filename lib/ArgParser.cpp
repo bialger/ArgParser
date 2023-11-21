@@ -145,8 +145,8 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, boo
 
   for (size_t position = 0, argument_index = 0;
        position < positional_args.size() &&
-       argument_index < positional_indices.size() &&
-       positional_args[position] != "--";
+           argument_index < positional_indices.size() &&
+           positional_args[position] != "--";
        ++position, ++argument_index) {
     std::vector<size_t> current_used_positions =
         arguments_[argument_index]->ValidateArgument(positional_args, position);
@@ -168,8 +168,9 @@ bool ArgumentParser::ArgParser::HandleErrors(bool print_errors) {
   std::string error_string;
   bool is_correct = true;
 
-  if (help_index_ != std::string::npos) {
-    return dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_])->GetValue(0);
+  if (help_index_ != std::string::npos &&
+      dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_])->GetValue(0)) {
+    return true;
   }
 
   for (const auto& argument : arguments_) {

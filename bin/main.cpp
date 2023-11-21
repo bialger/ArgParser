@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <numeric>
+#include <filesystem>
 
 struct Options {
   bool sum = false;
@@ -19,7 +20,7 @@ int main(int argc, char** argv) {
   parser.AddFlag("mult", "multiply args").StoreValue(opt.mult);
   parser.AddHelp('h', "help", "Program accumulate arguments");
 
-  if (!parser.Parse(argc, argv)) {
+  if (!parser.Parse(argc, argv, true)) {
     std::cout << "Wrong argument" << std::endl;
     std::cout << parser.HelpDescription() << std::endl;
     return 1;

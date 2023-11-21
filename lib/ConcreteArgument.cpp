@@ -23,10 +23,6 @@ ArgumentParser::ConcreteArgument<T>::ConcreteArgument(ArgumentInformation info,
   stored_value_ = stored_value;
   stored_values_ = stored_values;
 
-  if (info_.minimum_values == 0 && !info_.has_default) {
-    info_.minimum_values = 1;
-  }
-
   if (!info_.has_store_values) {
     stored_values_ = new std::vector<T>;
   }
@@ -197,7 +193,7 @@ size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const std::vec
     }
   }
 
-  if (info_.IsGood(value_string.data())) {
+  if (info_.IsGood(value_string)) {
     value_ = value_string;
   } else {
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
@@ -210,7 +206,54 @@ template<>
 size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std::vector<std::string>& argv,
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {
-  // TODO: implement composite argument handling
+  std::string value_string = argv[position];
+  used_values.push_back(position);
+
+  if (used_values.size() == 1 && !info_.is_positional) {
+    size_t equals_index = argv[position].find('=');
+
+    if (equals_index != std::string::npos) {
+      value_string = argv[position].substr(equals_index + 1);
+    } else {
+      ++position;
+      used_values.clear();
+      used_values.push_back(position);
+      value_string = argv[position];
+    }
+  }
+
+  if (info_.Validate(value_string)) {
+    size_t current = position;
+
+    while (current < argv.size() &&
+          value_status_ != ArgumentParsingStatus::kInvalidArgument &&
+          value_string.size() < 256 &&
+        !info_.IsGood(value_string)) {
+      value_string += " ";
+      value_string += argv[current];
+
+      if (!info_.Validate(value_string)) {
+        value_status_ = ArgumentParsingStatus::kInvalidArgument;
+        break;
+      }
+
+      ++current;
+    }
+
+    if (info_.Validate(value_string) && info_.IsGood(value_string)) {
+      value_ = value_string.data();
+      position = current;
+      size_t start_position = used_values.back();
+
+      for (size_t i = start_position; i <= current; ++i) {
+        used_values.push_back(i);
+      }
+    } else {
+      value_status_ = ArgumentParsingStatus::kInvalidArgument;
+    }
+  } else {
+    value_status_ = ArgumentParsingStatus::kInvalidArgument;
+  };
   return position;
 }
 

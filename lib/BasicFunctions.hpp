@@ -15,7 +15,7 @@ int SetConsoleTextAttribute(int a, int b);
 
 /** \n This function always returns true, because it is a default function */
 
-bool AlwaysTrue(char* str);
+bool AlwaysTrue(std::string& str);
 
 /** \n This function sets the console text color to red. */
 
@@ -38,14 +38,14 @@ bool IsWindows();
  * periods, hyphens, and spaces. Additionally, the code checks for consecutive
  * slashes in the filename, which is also considered invalid. */
 
-bool IsValidFilename(char* pre_filename);
+bool IsValidFilename(std::string& pre_filename);
 
 /** \n This function is a wrapper for the std::filesystem::is_regular_file function. */
 
-bool IsRegularFile(char* filename);
+bool IsRegularFile(std::string& filename);
 
 /** \n This function is a wrapper for the std::filesystem::is_directory function. */
 
-bool IsDirectory(char* dirname);
+bool IsDirectory(std::string& dirname);
 
 #endif //BASICFUNCTIONS_HPP_
