@@ -13,6 +13,10 @@ int GetStdHandle(int a);
 int SetConsoleTextAttribute(int a, int b);
 #endif
 
+/** \n This function always returns true, because it is a default function */
+
+bool AlwaysTrue(char* str);
+
 /** \n This function sets the console text color to red. */
 
 void SetRedColor();
@@ -23,7 +27,7 @@ void ResetColor();
 
 /** \n This function prints a error message. */
 
-void DisplayError(std::string_view message);
+void DisplayError(const std::string& message);
 
 /** \n This function checks if the code is running on Windows. */
 

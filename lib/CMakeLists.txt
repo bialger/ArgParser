@@ -1,29 +1,12 @@
 add_library(argparser ArgParser.cpp
         ArgParser.h
-        ArgumentBuilder.cpp
         ArgumentBuilder.h
-        Argument.cpp
         Argument.h
-        BoolArgument.cpp
-        BoolArgument.hpp
-        CompositeArgument.cpp
-        CompositeArgument.hpp
-        LongArgument.cpp
-        LongArgument.hpp
-        StringArgument.cpp
-        StringArgument.hpp
-        HelpComposer.cpp
-        HelpComposer.h
+        ConcreteArgumentBuilder.hpp
+        ConcreteArgument.cpp
+        ConcreteArgument.hpp
         BasicFunctions.cpp
         BasicFunctions.hpp
-        BoolArgumentBuilder.cpp
-        BoolArgumentBuilder.h
-        CompositeArgumentBuilder.cpp
-        CompositeArgumentBuilder.h
-        LongArgumentBuilder.cpp
-        LongArgumentBuilder.h
-        StringArgumentBuilder.cpp
-        StringArgumentBuilder.h
 )
 
 if(NOT CMAKE_BUILD_TYPE)

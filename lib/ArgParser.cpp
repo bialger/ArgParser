@@ -1,1 +1,197 @@
+#include <algorithm>
+
 #include "ArgParser.h"
+
+ArgumentParser::ArgParser::ArgParser(const char* name) {
+  name_ = name;
+  allowed_typenames_ = {typeid(bool).name(), typeid(int32_t).name(),
+                        typeid(std::string).name(), typeid(CompositeString).name()};
+  argument_builders_ = {};
+  arguments_ = {};
+  arguments_by_type_ = {};
+  short_to_long_names_ = {};
+
+  for (const std::string& type_name : allowed_typenames_) {
+    arguments_by_type_[type_name] = {};
+  }
+
+  help_index_ = std::string::npos;
+}
+
+ArgumentParser::ArgParser::~ArgParser() {
+  for (size_t i = 0; i < argument_builders_.size(); ++i) {
+    delete argument_builders_[i];
+    delete arguments_[i];
+  }
+}
+
+bool ArgumentParser::ArgParser::Parse(const std::vector<std::string>& args, bool print_errors) {
+  return Parse_(args, print_errors);
+}
+
+bool ArgumentParser::ArgParser::Parse(int argc, char** argv, bool print_errors) {
+  std::vector<std::string> args = std::vector<std::string>(argv, argv + argc);
+
+  return Parse_(args, print_errors);
+}
+
+bool ArgumentParser::ArgParser::Help() {
+  if (help_index_ == std::string::npos) {
+    return false;
+  }
+
+  return GetValue<bool>(arguments_[help_index_]->GetInfo().long_key);
+}
+
+std::string ArgumentParser::ArgParser::HelpDescription() {
+  if (help_index_ == std::string::npos) {
+    return {};
+  }
+
+  std::string help = name_;
+  help += "\n";
+  help += argument_builders_[help_index_]->GetInfo().description;
+  help += "\n\n";
+
+  for (const auto& argument : arguments_) {
+    ArgumentInformation current_info = argument->GetInfo();
+    // TODO: Implement help description
+  }
+  return help;
+}
+
+ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(char short_name,
+                                                                                  const char* long_name,
+                                                                                  const char* description) {
+  ConcreteArgumentBuilder<bool>* help_argument_ = &AddArgument<bool>(short_name, long_name, description);
+  help_index_ = argument_builders_.size() - 1;
+  return *help_argument_;
+}
+
+ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const char* long_name,
+                                                                                  const char* description) {
+  return AddHelp(kBadChar, long_name, description);
+}
+
+bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, bool print_errors) {
+  RefreshArguments();
+  std::vector<size_t> used_positions = {0};
+  std::vector<std::string> argv = args;
+
+  for (std::string& arg : argv) {
+    if (arg[0] == '\'' || arg[0] == '"') {
+      arg = arg.substr(1);
+    }
+
+    if (arg.back() == '\'' || arg.back() == '"') {
+      arg = arg.substr(0, arg.size() - 1);
+    }
+  }
+
+  for (size_t position = 1; position < argv.size() && argv[position] != "--"; ++position) {
+    if (argv[position][0] == '-') {
+      if (argv[position].size() == 1) {
+        return false;
+      }
+
+      std::vector<std::string> long_keys = {argv[position].substr(2)};
+
+      if (long_keys[0].find('=') != std::string::npos) {
+        long_keys[0] = long_keys[0].substr(0, long_keys[0].find('='));
+      }
+
+      if (argv[position][1] != '-') {
+        long_keys.clear();
+
+        for (size_t current_key_index = 1;
+             current_key_index < argv[position].size() &&
+                 short_to_long_names_.find(argv[position][current_key_index]) != short_to_long_names_.end();
+             ++current_key_index) {
+          long_keys.push_back(short_to_long_names_.at(argv[position][current_key_index]));
+        }
+      }
+
+      for (const std::string& type_name : allowed_typenames_) {
+        std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(type_name);
+
+        for (const std::string& long_key : long_keys) {
+          if (t_arguments->find(long_key) != t_arguments->end()) {
+            std::vector<size_t> current_used_positions =
+                arguments_[t_arguments->at(long_key)]->ValidateArgument(argv, position);
+            position = (current_used_positions.empty()) ? position : current_used_positions.back();
+            used_positions.insert(std::end(used_positions), std::begin(current_used_positions),
+                                  std::end(current_used_positions));
+          }
+        }
+      }
+    }
+  }
+
+  std::vector<std::string> positional_args;
+  std::vector<size_t> positional_indices;
+
+  for (size_t i = 0; i < arguments_.size(); ++i) {
+    if (arguments_[i]->GetInfo().is_positional) {
+      positional_indices.push_back(i);
+    }
+  }
+
+  for (size_t i = 0; i < argv.size(); ++i) {
+    if (std::find(std::begin(used_positions), std::end(used_positions), i) ==
+        std::end(used_positions)) {
+      positional_args.push_back(argv[i]);
+    }
+  }
+
+  for (size_t position = 0, argument_index = 0;
+       position < positional_args.size() &&
+       argument_index < positional_indices.size() &&
+       positional_args[position] != "--";
+       ++position, ++argument_index) {
+    std::vector<size_t> current_used_positions =
+        arguments_[argument_index]->ValidateArgument(positional_args, position);
+    position = (current_used_positions.empty()) ? position : current_used_positions.back();
+  }
+
+  return HandleErrors(print_errors);
+}
+
+void ArgumentParser::ArgParser::RefreshArguments() {
+  if (argument_builders_.size() != arguments_.size()) {
+    for (size_t i = arguments_.size(); i < argument_builders_.size(); ++i) {
+      arguments_.push_back(argument_builders_[i]->build());
+    }
+  }
+}
+
+bool ArgumentParser::ArgParser::HandleErrors(bool print_errors) {
+  std::string error_string;
+  bool is_correct = true;
+
+  if (help_index_ != std::string::npos) {
+    return dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_])->GetValue(0);
+  }
+
+  for (const auto& argument : arguments_) {
+    if (!argument->CheckLimit()) {
+      error_string += "Not enough values were passed to argument --";
+      error_string += argument->GetInfo().long_key;
+      error_string += ".\n";
+      is_correct = false;
+    }
+
+    if (argument->GetValueStatus() == ArgumentParsingStatus::kInvalidArgument) {
+      error_string += "An incorrect value was passed to the --";
+      error_string += argument->GetInfo().long_key;
+      error_string += " argument.\n";
+      is_correct = false;
+    }
+  }
+
+  if (print_errors) {
+    DisplayError(error_string);
+  }
+
+  return is_correct;
+}
+

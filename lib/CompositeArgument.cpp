@@ -69,11 +69,11 @@ void ArgumentParser::CompositeArgument::ValidateArgument(char** argv,
       if (info_.Validate(value_)) {
         is_real_file = info_.IsGood(value_);
       } else {
-        value_status_ = ArgumentParsingStatus::kBrokenArgument;
+        value_status_ = ArgumentParsingStatus::kInvalidArgument;
       }
 
       while (!is_real_file && current < argc - 1 &&
-          value_status_ != ArgumentParsingStatus::kBrokenArgument &&
+          value_status_ != ArgumentParsingStatus::kInvalidArgument &&
           strlen(value_) < 256) {
         size_t len = strlen(value_) + strlen(argv[current + 1]) + 2;
         char* new_candidate = new char[len];
@@ -87,7 +87,7 @@ void ArgumentParser::CompositeArgument::ValidateArgument(char** argv,
         if (info_.Validate(value_)) {
           is_real_file = info_.IsGood(value_);
         } else {
-          value_status_ = ArgumentParsingStatus::kBrokenArgument;
+          value_status_ = ArgumentParsingStatus::kInvalidArgument;
         }
 
         ++current;
@@ -98,7 +98,7 @@ void ArgumentParser::CompositeArgument::ValidateArgument(char** argv,
       } else {
         delete[] value_;
         value_ = kError;
-        value_status_ = ArgumentParsingStatus::kBrokenArgument;
+        value_status_ = ArgumentParsingStatus::kInvalidArgument;
       }
     }
   }
@@ -118,7 +118,7 @@ void ArgumentParser::CompositeArgument::ValidateArgument(char** argv,
   }
 
   if (value_status_ == ArgumentParsingStatus::kNoArgument) {
-    value_status_ = ArgumentParsingStatus::kBrokenArgument;
+    value_status_ = ArgumentParsingStatus::kInvalidArgument;
   }
 }
 

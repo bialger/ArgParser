@@ -58,7 +58,7 @@ void ArgumentParser::StringArgument::ValidateArgument (char* candidate, char* va
 
   if (!info_.IsGood(value)) {
     value_ = kError;
-    value_status_ = ArgumentParsingStatus::kBrokenArgument;
+    value_status_ = ArgumentParsingStatus::kInvalidArgument;
   }
 }
 
