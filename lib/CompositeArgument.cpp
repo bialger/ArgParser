@@ -1,26 +1,26 @@
 #include <cstring>
-#include "composite_argument.hpp"
-#include "lib/basic/basic_functions.hpp"
+#include "CompositeArgument.hpp"
+#include "BasicFunctions.hpp"
 
-CompositeArgument::CompositeArgument() {
+ArgumentParser::CompositeArgument::CompositeArgument() {
   value_ = kError;
   value_status_ = ArgumentParsingStatus::kNoArgument;
   info_ = ArgumentInformation{};
 }
 
-CompositeArgument::CompositeArgument(ArgumentInformation info) {
+ArgumentParser::CompositeArgument::CompositeArgument(ArgumentInformation info) {
   value_ = kError;
   value_status_ = ArgumentParsingStatus::kNoArgument;
   info_ = info;
 }
 
-CompositeArgument::CompositeArgument(const CompositeArgument& other) {
+ArgumentParser::CompositeArgument::CompositeArgument(const CompositeArgument& other) {
   value_ = other.value_;
   value_status_ = other.value_status_;
   info_ = other.info_;
 }
 
-CompositeArgument& CompositeArgument::operator=(const CompositeArgument& other) {
+ArgumentParser::CompositeArgument& ArgumentParser::CompositeArgument::operator=(const CompositeArgument& other) {
   if (this == &other) {
     return *this;
   }
@@ -32,11 +32,11 @@ CompositeArgument& CompositeArgument::operator=(const CompositeArgument& other) 
   return *this;
 }
 
-CompositeArgument::~CompositeArgument() {
+ArgumentParser::CompositeArgument::~CompositeArgument() {
   delete[] value_;
 }
 
-void CompositeArgument::ValidateArgument(char** argv,
+void ArgumentParser::CompositeArgument::ValidateArgument(char** argv,
                                          int32_t argc,
                                          char* candidate,
                                          char* value,
@@ -122,22 +122,22 @@ void CompositeArgument::ValidateArgument(char** argv,
   }
 }
 
-char* CompositeArgument::GetValue() const {
+char* ArgumentParser::CompositeArgument::GetValue() const {
   return value_;
 }
 
-ArgumentParsingStatus CompositeArgument::GetValueStatus() const {
+ArgumentParser::ArgumentParsingStatus ArgumentParser::CompositeArgument::GetValueStatus() const {
   return value_status_;
 }
 
-ArgumentType CompositeArgument::GetType() const {
+ArgumentParser::ArgumentType ArgumentParser::CompositeArgument::GetType() const {
   return info_.type;
 }
 
-const char* CompositeArgument::GetName() const {
+const char* ArgumentParser::CompositeArgument::GetName() const {
   return info_.name;
 }
 
-bool CompositeArgument::GetIsRequired() const {
+bool ArgumentParser::CompositeArgument::GetIsRequired() const {
   return info_.is_required;
 }

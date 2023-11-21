@@ -1,9 +1,11 @@
 #ifndef STRING_ARGUMENT_HPP_
 #define STRING_ARGUMENT_HPP_
 
-#include "argument.hpp"
+#include "Argument.h"
 
 #include <cstdint>
+
+namespace ArgumentParser {
 
 class StringArgument : Argument {
  public:
@@ -25,5 +27,7 @@ class StringArgument : Argument {
   ArgumentParsingStatus value_status_;
   ArgumentInformation info_;
 };
+
+} // namespace ArgumentParser
 
 #endif //STRING_ARGUMENT_HPP_

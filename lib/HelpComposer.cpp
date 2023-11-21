@@ -1,0 +1,1 @@
+#include "HelpComposer.h"

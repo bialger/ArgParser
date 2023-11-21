@@ -1,9 +1,11 @@
 #ifndef COMPOSITE_ARGUMENT_HPP_
 #define COMPOSITE_ARGUMENT_HPP_
 
-#include "argument.hpp"
+#include "Argument.h"
 
 #include <cstdint>
+
+namespace ArgumentParser {
 
 class CompositeArgument : Argument {
  public:
@@ -25,5 +27,7 @@ class CompositeArgument : Argument {
   ArgumentParsingStatus value_status_;
   ArgumentInformation info_;
 };
+
+} // namespace ArgumentParser
 
 #endif //COMPOSITE_ARGUMENT_HPP_

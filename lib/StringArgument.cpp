@@ -1,26 +1,26 @@
-#include "string_argument.hpp"
+#include "StringArgument.hpp"
 
 #include <cstring>
 
-StringArgument::StringArgument() {
+ArgumentParser::StringArgument::StringArgument() {
   value_ = kError;
   value_status_ = ArgumentParsingStatus::kNoArgument;
   info_ = ArgumentInformation{};
 }
 
-StringArgument::StringArgument(ArgumentInformation info) {
+ArgumentParser::StringArgument::StringArgument(ArgumentInformation info) {
   value_ = kError;
   value_status_ = ArgumentParsingStatus::kNoArgument;
   info_ = info;
 }
 
-StringArgument::StringArgument(const StringArgument& other) {
+ArgumentParser::StringArgument::StringArgument(const StringArgument& other) {
   value_ = other.value_;
   value_status_ = other.value_status_;
   info_ = other.info_;
 }
 
-StringArgument& StringArgument::operator=(const StringArgument& other) {
+ArgumentParser::StringArgument& ArgumentParser::StringArgument::operator=(const StringArgument& other) {
   if (this == &other) {
     return *this;
   }
@@ -32,11 +32,11 @@ StringArgument& StringArgument::operator=(const StringArgument& other) {
   return *this;
 }
 
-StringArgument::~StringArgument() {
+ArgumentParser::StringArgument::~StringArgument() {
   delete[] value_;
 }
 
-void StringArgument::ValidateArgument (char* candidate, char* value, bool is_last) {
+void ArgumentParser::StringArgument::ValidateArgument (char* candidate, char* value, bool is_last) {
   bool is_short = strcmp(candidate, info_.short_key) == 0 && !is_last;
   bool is_long = strncmp(candidate, info_.long_key, strlen(info_.long_key)) == 0;
 
@@ -62,22 +62,22 @@ void StringArgument::ValidateArgument (char* candidate, char* value, bool is_las
   }
 }
 
-char* StringArgument::GetValue() const {
+char* ArgumentParser::StringArgument::GetValue() const {
   return value_;
 }
 
-ArgumentParsingStatus StringArgument::GetValueStatus() const {
+ArgumentParser::ArgumentParsingStatus ArgumentParser::StringArgument::GetValueStatus() const {
   return value_status_;
 }
 
-ArgumentType StringArgument::GetType() const {
+ArgumentParser::ArgumentType ArgumentParser::StringArgument::GetType() const {
   return info_.type;
 }
 
-const char* StringArgument::GetName() const {
+const char* ArgumentParser::StringArgument::GetName() const {
   return info_.name;
 }
 
-bool StringArgument::GetIsRequired() const {
+bool ArgumentParser::StringArgument::GetIsRequired() const {
   return info_.is_required;
 }

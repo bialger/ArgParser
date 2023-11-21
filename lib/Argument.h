@@ -1,5 +1,7 @@
-#ifndef ARGUMENT_HPP_
-#define ARGUMENT_HPP_
+#ifndef ARGUMENT_H_
+#define ARGUMENT_H_
+
+namespace ArgumentParser {
 
 enum class ArgumentParsingStatus {
   kNoArgument,
@@ -36,4 +38,7 @@ class Argument {
   virtual bool GetIsRequired() const = 0;
 };
 
-#endif //ARGUMENT_HPP_
+} // namespace ArgumentParser
+
+#endif //ARGUMENT_H_
+

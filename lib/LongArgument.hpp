@@ -1,9 +1,11 @@
 #ifndef LONG_ARGUMENT_HPP_
 #define LONG_ARGUMENT_HPP_
 
-#include "argument.hpp"
+#include "Argument.h"
 
 #include <cstdint>
+
+namespace ArgumentParser {
 
 class LongArgument : Argument {
  public:
@@ -21,5 +23,7 @@ class LongArgument : Argument {
   ArgumentParsingStatus value_status_;
   ArgumentInformation info_;
 };
+
+} // namespace ArgumentParser
 
 #endif //LONG_ARGUMENT_HPP_
