@@ -190,7 +190,7 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Err
         }
 
         if (!was_found) {
-          DisplayError("Used nonexistent argument: " + long_key + "\n", error_output);
+          DisplayError("Used nonexistent argument: " + argv[position] + "\n", error_output);
           return false;
         }
       }
