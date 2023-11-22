@@ -228,8 +228,7 @@ bool ArgumentParser::ArgParser::HandleErrors(bool print_errors) {
   std::string error_string;
   bool is_correct = true;
 
-  if (help_index_ != std::string::npos &&
-      dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_])->GetValue(0)) {
+  if (help_index_ != std::string::npos && Help()) {
     return true;
   }
 
