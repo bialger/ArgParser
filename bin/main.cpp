@@ -2,7 +2,7 @@
 #include <iostream>
 #include <numeric>
 
-#include <lib/ArgParser.h>
+#include "lib/argparser/ArgParser.h"
 
 struct Options {
   bool sum = false;
