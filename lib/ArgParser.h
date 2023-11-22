@@ -62,6 +62,7 @@ class ArgParser {
   std::vector<ArgumentBuilder*> argument_builders_;
   std::vector<Argument*> arguments_;
   std::vector<std::string> allowed_typenames_;
+  std::vector<std::string> allowed_typenames_for_help_;
   std::map<std::string, std::map<std::string, size_t>> arguments_by_type_;
   std::map<char, std::string> short_to_long_names_;
   size_t help_index_;

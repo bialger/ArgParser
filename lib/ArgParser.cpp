@@ -4,8 +4,9 @@
 
 ArgumentParser::ArgParser::ArgParser(const char* name) {
   name_ = name;
-  allowed_typenames_ = {typeid(bool).name(), typeid(int32_t).name(),
-                        typeid(std::string).name(), typeid(CompositeString).name()};
+  allowed_typenames_ = {typeid(std::string).name(), typeid(bool).name(),
+                        typeid(int32_t).name(), typeid(CompositeString).name()};
+  allowed_typenames_for_help_ = {"string", "bool", "int", "CompositeString"};
   argument_builders_ = {};
   arguments_ = {};
   arguments_by_type_ = {};
@@ -51,12 +52,69 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
   std::string help = name_;
   help += "\n";
   help += argument_builders_[help_index_]->GetInfo().description;
-  help += "\n\n";
+  help += "\n\nOPTIONS:\n";
 
-  for (const auto& argument : arguments_) {
-    ArgumentInformation current_info = argument->GetInfo();
-    // TODO: Implement help description
+  for (size_t i = 0; i < allowed_typenames_.size(); ++i) {
+    std::string type_name = allowed_typenames_[i];
+    std::string output_type_name = allowed_typenames_for_help_[i];
+
+    for (const auto& iterator : arguments_by_type_[type_name]) {
+      if (iterator.second == help_index_) {
+        continue;
+      }
+
+      ArgumentBuilder* argument = argument_builders_[iterator.second];
+      ArgumentInformation current_info = argument->GetInfo();
+      help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
+      help += std::string("--") + current_info.long_key;
+
+      if (type_name != typeid(bool).name()) {
+        help += "=<" + output_type_name + ">";
+      }
+
+      help += ",  ";
+      help += current_info.description;
+
+      if (current_info.is_multi_value ||
+          current_info.is_positional ||
+          (current_info.has_default && type_name == typeid(bool).name() && argument->GetDefaultValue() != "0") ||
+          (current_info.minimum_values != 0 && current_info.is_multi_value)) {
+        help += " [";
+        if (current_info.is_multi_value) {
+          help += "repeated, ";
+        }
+
+        if (current_info.is_positional) {
+          help += "positional, ";
+        }
+
+        if (current_info.has_default) {
+          help += "default = ";
+          if (type_name == typeid(bool).name()) {
+            help += (argument->GetDefaultValue() == "0") ? "false" : "true";
+            help += ", ";
+          }
+        }
+
+        if (current_info.minimum_values != 0) {
+          help += "min args = " + std::to_string(current_info.minimum_values) + ", ";
+        }
+
+        help = help.substr(0, help.size() - 2);
+        help += "]";
+      }
+
+      help += "\n";
+    }
   }
+
+  help += "\n";
+  ArgumentBuilder* argument = argument_builders_[help_index_];
+  ArgumentInformation current_info = argument->GetInfo();
+  help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
+  help += std::string("--") + current_info.long_key + " " + "Display this help and exit";
+  help += "\n";
+
   return help;
 }
 
