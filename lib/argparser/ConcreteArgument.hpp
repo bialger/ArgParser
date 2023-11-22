@@ -10,7 +10,6 @@ class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
   ConcreteArgument(ArgumentInformation info, T default_value, T* stored_value, std::vector<T>* stored_values);
-  ~ConcreteArgument() = default;
   T GetValue(size_t index) const;
   std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) override;
   bool CheckLimit() override;
