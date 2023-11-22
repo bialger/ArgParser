@@ -247,16 +247,20 @@ void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::
            positional_args[position] != "--";
        ++position, ++argument_index) {
     std::vector<size_t> current_used_positions =
-        arguments_[argument_index]->ValidateArgument(positional_args, position);
+        arguments_[positional_indices[argument_index]]->ValidateArgument(positional_args, position);
     position = (current_used_positions.empty()) ? position : current_used_positions.back();
   }
 }
 
 void ArgumentParser::ArgParser::RefreshArguments() {
-  if (argument_builders_.size() != arguments_.size()) {
-    for (size_t i = arguments_.size(); i < argument_builders_.size(); ++i) {
-      arguments_.push_back(argument_builders_[i]->build());
-    }
+  for (Argument* argument : arguments_) {
+    delete argument;
+  }
+
+  arguments_.clear();
+
+  for (ArgumentBuilder* argument_builder : argument_builders_) {
+    arguments_.push_back(argument_builder->build());
   }
 }
 

@@ -94,13 +94,9 @@ class ArgParser {
 
   template<typename T>
   T GetValue_(const char* long_name, size_t index) {
-    if (arguments_.size() < argument_builders_.size()) {
-      throw std::runtime_error("Argument " + std::string(long_name) + " is not ready yet.");
-    }
-
     std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
     size_t argument_index = t_arguments->at(long_name);
-    ConcreteArgument<T>* argument = static_cast<ConcreteArgument<T>*>(arguments_[argument_index]);
+    ConcreteArgument<T>* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
     return argument->GetValue(index);
   }
 };
