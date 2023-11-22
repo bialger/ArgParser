@@ -143,7 +143,7 @@ size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<int32_t>::min() || pre_value >= std::numeric_limits<int32_t>::max()) &&
-          errno == ERANGE)) {
+          errno == ERANGE) || !info_.IsGood(value_string)) {
     errno = save_errno;
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
   } else {
