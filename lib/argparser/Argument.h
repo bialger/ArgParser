@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "BasicFunctions.hpp"
+#include "lib/basic/BasicFunctions.hpp"
 
 class CompositeString : public std::string {
  private:

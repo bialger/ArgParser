@@ -14,7 +14,7 @@
 
 ## Зависимости
 
-Зависит от [BasicFunctions.cpp](../BasicFunctions.cpp), 
+Зависит от [BasicFunctions.cpp](../../basic/BasicFunctions.cpp), 
 [ConcreteArgument.cpp](../ConcreteArgument.cpp), 
 [ConcreteArgumentBuilder.hpp](../ConcreteArgumentBuilder.hpp).
 
