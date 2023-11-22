@@ -28,7 +28,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
   ConcreteArgumentBuilder& operator=(const ConcreteArgumentBuilder& other) = delete;
   ~ConcreteArgumentBuilder() override = default;
 
-  ConcreteArgumentBuilder& MultiValue(int min = 0) {
+  ConcreteArgumentBuilder& MultiValue(size_t min = 0) {
     info_.is_multi_value = true;
     info_.minimum_values = min;
     return *this;
