@@ -30,10 +30,20 @@ void ResetColor() {
   std::cout << (IsWindows() ? "" : "\x1B[0m");
 }
 
-void DisplayError(const std::string& message) {
-  SetRedColor();
-  std::cout << message;
-  ResetColor();
+void DisplayError(const std::string& message, ErrorOutput error_output) {
+  if (!error_output.print_errors) {
+    return;
+  }
+
+  if (&error_output.error_stream == &std::cout) {
+    SetRedColor();
+  }
+
+  error_output.error_stream << message;
+
+  if (&error_output.error_stream == &std::cout) {
+    ResetColor();
+  }
 }
 
 bool IsWindows() {

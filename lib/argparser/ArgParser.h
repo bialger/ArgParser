@@ -24,8 +24,8 @@ class ArgParser {
   ArgParser& operator=(const ArgParser& other) = delete;
   ~ArgParser();
 
-  bool Parse(const std::vector<std::string>& args, bool print_errors = false);
-  bool Parse(int argc, char** argv, bool print_errors = false);
+  bool Parse(const std::vector<std::string>& args, ErrorOutput error_output = {});
+  bool Parse(int argc, char** argv, ErrorOutput error_output = {});
 
   bool Help();
   std::string HelpDescription();
@@ -67,9 +67,9 @@ class ArgParser {
   std::map<char, std::string> short_to_long_names_;
   size_t help_index_;
 
-  bool Parse_(const std::vector<std::string>& args, bool print_errors);
+  bool Parse_(const std::vector<std::string>& args, ErrorOutput error_output);
 
-  bool HandleErrors(bool print_errors);
+  bool HandleErrors(ErrorOutput error_output);
 
   void RefreshArguments();
 

@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string_view>
+#include <iostream>
 
 #if defined _WIN32 || defined _WIN64 || defined __CYGWIN__
 #include <Windows.h>
@@ -12,6 +13,13 @@
 int GetStdHandle(int a);
 int SetConsoleTextAttribute(int a, int b);
 #endif
+
+/** \n Structure for error output in ArgumentParser */
+
+struct ErrorOutput {
+  std::ostream& error_stream = std::cout;
+  bool print_errors = false;
+};
 
 /** \n This function always returns true, because it is a default function */
 
@@ -27,7 +35,7 @@ void ResetColor();
 
 /** \n This function prints a error message. */
 
-void DisplayError(const std::string& message);
+void DisplayError(const std::string& message, ErrorOutput error_output);
 
 /** \n This function checks if the code is running on Windows. */
 
