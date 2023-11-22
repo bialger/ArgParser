@@ -10,7 +10,7 @@ add_library(argparser ArgParser.cpp
 )
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
