@@ -78,7 +78,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
       info_.has_default = true;
     }
 
-    if (info_.minimum_values == 0 && !info_.has_default) {
+    if (info_.minimum_values == 0 && !info_.has_default && !info_.is_multi_value) {
       info_.minimum_values = 1;
     }
 

@@ -81,6 +81,7 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
       if (current_info.is_multi_value ||
           current_info.is_positional ||
           (current_info.has_default && type_name == typeid(bool).name() && argument->GetDefaultValue() != "0") ||
+          (current_info.has_default && type_name != typeid(bool).name()) ||
           (current_info.minimum_values != 0 && current_info.is_multi_value)) {
         help += " [";
         if (current_info.is_multi_value) {
@@ -93,10 +94,14 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
 
         if (current_info.has_default) {
           help += "default = ";
+          
           if (type_name == typeid(bool).name()) {
             help += (argument->GetDefaultValue() == "0") ? "false" : "true";
-            help += ", ";
+          } else {
+            help += argument->GetDefaultValue();
           }
+
+          help += ", ";
         }
 
         if (current_info.minimum_values != 0) {
