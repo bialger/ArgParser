@@ -23,7 +23,7 @@ ArgumentParser::ArgParser::~ArgParser() {
   for (size_t i = 0; i < argument_builders_.size(); ++i) {
     delete argument_builders_[i];
   }
-  
+
   for (size_t i = 0; i < arguments_.size(); ++i) {
     delete arguments_[i];
   }
@@ -94,7 +94,7 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
 
         if (current_info.has_default) {
           help += "default = ";
-          
+
           if (type_name == typeid(bool).name()) {
             help += (argument->GetDefaultValue() == "0") ? "false" : "true";
           } else {
@@ -162,39 +162,69 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Err
         return false;
       }
 
-      std::vector<std::string> long_keys = {argv[position].substr(2)};
+      std::vector<std::string> long_keys = GetLongKeys(argv[position]);
 
-      if (long_keys[0].find('=') != std::string::npos) {
-        long_keys[0] = long_keys[0].substr(0, long_keys[0].find('='));
+      if (long_keys.empty()) {
+        DisplayError("Used nonexistent argument: " + argv[position] + "\n", error_output);
+        return false;
       }
 
-      if (argv[position][1] != '-') {
-        long_keys.clear();
+      for (const std::string& long_key : long_keys) {
+        bool was_found = false;
 
-        for (size_t current_key_index = 1;
-             current_key_index < argv[position].size() &&
-                 short_to_long_names_.find(argv[position][current_key_index]) != short_to_long_names_.end();
-             ++current_key_index) {
-          long_keys.push_back(short_to_long_names_.at(argv[position][current_key_index]));
-        }
-      }
+        for (const std::string& type_name : allowed_typenames_) {
+          std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(type_name);
 
-      for (const std::string& type_name : allowed_typenames_) {
-        std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(type_name);
-
-        for (const std::string& long_key : long_keys) {
           if (t_arguments->find(long_key) != t_arguments->end()) {
+            was_found = true;
             std::vector<size_t> current_used_positions =
                 arguments_[t_arguments->at(long_key)]->ValidateArgument(argv, position);
             position = (current_used_positions.empty()) ? position : current_used_positions.back();
             used_positions.insert(std::end(used_positions), std::begin(current_used_positions),
                                   std::end(current_used_positions));
           }
+
+          if (was_found) {
+            break;
+          }
+        }
+
+        if (!was_found) {
+          DisplayError("Used nonexistent argument: " + long_key + "\n", error_output);
+          return false;
         }
       }
     }
   }
 
+  ParsePositionalArguments(argv, used_positions);
+
+  return HandleErrors(error_output);
+}
+
+std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) {
+  std::vector<std::string> long_keys = {current_argument.substr(2)};
+
+  if (long_keys[0].find('=') != std::string::npos) {
+    long_keys[0] = long_keys[0].substr(0, long_keys[0].find('='));
+  }
+
+  if (current_argument[1] != '-') {
+    long_keys.clear();
+
+    for (size_t current_key_index = 1;
+         current_key_index < current_argument.size() &&
+             short_to_long_names_.find(current_argument[current_key_index]) != short_to_long_names_.end();
+         ++current_key_index) {
+      long_keys.push_back(short_to_long_names_.at(current_argument[current_key_index]));
+    }
+  }
+
+  return long_keys;
+}
+
+void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::string>& argv,
+                                                         const std::vector<size_t>& used_positions) {
   std::vector<std::string> positional_args = {};
   std::vector<size_t> positional_indices = {};
 
@@ -220,8 +250,6 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Err
         arguments_[argument_index]->ValidateArgument(positional_args, position);
     position = (current_used_positions.empty()) ? position : current_used_positions.back();
   }
-
-  return HandleErrors(error_output);
 }
 
 void ArgumentParser::ArgParser::RefreshArguments() {
@@ -260,4 +288,3 @@ bool ArgumentParser::ArgParser::HandleErrors(ErrorOutput error_output) {
 
   return is_correct;
 }
-
