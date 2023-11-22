@@ -25,8 +25,14 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
   }
 
   ConcreteArgumentBuilder(const ConcreteArgumentBuilder& other) = delete;
+
   ConcreteArgumentBuilder& operator=(const ConcreteArgumentBuilder& other) = delete;
-  ~ConcreteArgumentBuilder() override = default;
+
+  ~ConcreteArgumentBuilder() override {
+    if (!info_.has_store_values) {
+      delete stored_values_;
+    }
+  }
 
   ConcreteArgumentBuilder& MultiValue(size_t min = 0) {
     info_.is_multi_value = true;
@@ -76,6 +82,10 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
       info_.minimum_values = 1;
     }
 
+    if (!info_.has_store_values) {
+      stored_values_ = new std::vector<T>;
+    }
+
     return new ConcreteArgument<T>(info_, default_value_, stored_value_, stored_values_);
   }
 
@@ -88,6 +98,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
     stream << default_value_;
     return stream.str();
   }
+
  private:
   ArgumentInformation info_;
   T default_value_;

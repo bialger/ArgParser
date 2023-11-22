@@ -23,17 +23,6 @@ ArgumentParser::ConcreteArgument<T>::ConcreteArgument(ArgumentInformation info,
   default_value_ = default_value;
   stored_value_ = stored_value;
   stored_values_ = stored_values;
-
-  if (!info_.has_store_values) {
-    stored_values_ = new std::vector<T>;
-  }
-}
-
-template<typename T>
-ArgumentParser::ConcreteArgument<T>::~ConcreteArgument() {
-  if (!info_.has_store_values) {
-    delete stored_values_;
-  }
 }
 
 template<typename T>

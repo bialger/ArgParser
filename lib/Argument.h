@@ -44,7 +44,6 @@ struct ArgumentInformation {
 
 class Argument {
  public:
-  virtual ~Argument() = default;
   virtual std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) = 0;
   virtual bool CheckLimit() = 0;
   virtual ArgumentParsingStatus GetValueStatus() const = 0;
