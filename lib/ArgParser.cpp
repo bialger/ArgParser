@@ -72,7 +72,7 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
         help += "=<" + output_type_name + ">";
       }
 
-      help += ",  ";
+      help += ":  ";
       help += current_info.description;
 
       if (current_info.is_multi_value ||
@@ -112,7 +112,7 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
   ArgumentBuilder* argument = argument_builders_[help_index_];
   ArgumentInformation current_info = argument->GetInfo();
   help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
-  help += std::string("--") + current_info.long_key + " " + "Display this help and exit";
+  help += std::string("--") + current_info.long_key + ":  " + "Display this help and exit";
   help += "\n";
 
   return help;

@@ -171,11 +171,26 @@ TEST(ArgParserTestSuite, HelpStringTest) {
         "Some Description about program\n"
         "\n"
         "OPTIONS:\n"
-        "-i,  --input=<string>,  File path for input file [repeated, min args = 1]\n"
-        "-s,  --flag1,  Use some logic [default = true]\n"
-        "-p,  --flag2,  Use some logic\n"
-        "     --number=<int>,  Some Number\n"
+        "-i,  --input=<string>:  File path for input file [repeated, min args = 1]\n"
+        "-s,  --flag1:  Use some logic [default = true]\n"
+        "-p,  --flag2:  Use some logic\n"
+        "     --number=<int>:  Some Number\n"
         "\n"
-        "-h,  --help Display this help and exit\n"
+        "-h,  --help:  Display this help and exit\n"
     );
+}
+
+TEST(ArgParserTestSuite, CompositeStringTest) {
+  ArgParser parser("My Parser");
+  parser.AddHelp('h', "help", "Some Description about program");
+  parser.AddCompositeArgument('i', "input", "File path for input file").AddValidate(&IsValidFilename).AddIsGood(&IsRegularFile);
+  parser.AddCompositeArgument('o', "output", "File path for output directory").AddValidate(&IsValidFilename).AddIsGood(&IsDirectory);
+  parser.AddFlag('s', "flag1", "Use some logic").Default(true);
+  parser.AddFlag('p', "flag2", "Use some logic");
+  parser.AddIntArgument("number", "Some Number");
+
+  ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i argparser_tests -o=./CMakeFiles/argparser_tests.dir")));
+
+  ASSERT_EQ(parser.GetCompositeValue("input"), "argparser_tests");
+  ASSERT_EQ(parser.GetCompositeValue("output"), "./CMakeFiles/argparser_tests.dir");
 }
