@@ -254,6 +254,7 @@ void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::
 
 void ArgumentParser::ArgParser::RefreshArguments() {
   for (Argument* argument : arguments_) {
+    argument->ClearStored();
     delete argument;
   }
 

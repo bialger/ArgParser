@@ -69,6 +69,16 @@ bool ArgumentParser::ConcreteArgument<T>::CheckLimit() {
 }
 
 template<typename T>
+void ArgumentParser::ConcreteArgument<T>::ClearStored() {
+  stored_values_->clear();
+  value_counter_ = 0;
+
+  if (stored_value_ != nullptr) {
+    *stored_value_ = default_value_;
+  }
+}
+
+template<typename T>
 std::vector<size_t> ArgumentParser::ConcreteArgument<T>::ValidateArgument(const std::vector<std::string>& argv,
                                                                           size_t position) {
   std::vector<size_t> used_positions;

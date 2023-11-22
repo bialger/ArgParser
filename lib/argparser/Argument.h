@@ -50,6 +50,7 @@ class Argument {
   virtual const std::string& GetType() const = 0;
   virtual const ArgumentInformation& GetInfo() const = 0;
   virtual size_t GetUsedValues() const = 0;
+  virtual void ClearStored() = 0;
  protected:
   virtual size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
                              std::vector<size_t>& used_values, size_t position) = 0;

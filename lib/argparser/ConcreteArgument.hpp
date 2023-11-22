@@ -17,6 +17,7 @@ class ConcreteArgument : public Argument {
   const std::string& GetType() const override;
   const ArgumentInformation& GetInfo() const override;
   size_t GetUsedValues() const override;
+  void ClearStored() override;
  private:
   ArgumentInformation info_;
   ArgumentParsingStatus value_status_;
