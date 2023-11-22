@@ -146,6 +146,8 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, boo
     }
   }
 
+  argv.emplace_back("--");
+
   for (size_t position = 1; position < argv.size() && argv[position] != "--"; ++position) {
     if (argv[position][0] == '-') {
       if (argv[position].size() == 1) {
@@ -185,8 +187,8 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, boo
     }
   }
 
-  std::vector<std::string> positional_args;
-  std::vector<size_t> positional_indices;
+  std::vector<std::string> positional_args = {};
+  std::vector<size_t> positional_indices = {};
 
   for (size_t i = 0; i < arguments_.size(); ++i) {
     if (arguments_[i]->GetInfo().is_positional) {

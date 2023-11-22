@@ -1,7 +1,7 @@
-#include <lib/ArgParser.h>
-#include <gtest/gtest.h>
 #include <sstream>
 
+#include <lib/ArgParser.h>
+#include <gtest/gtest.h>
 
 using namespace ArgumentParser;
 
@@ -193,4 +193,17 @@ TEST(ArgParserTestSuite, CompositeStringTest) {
 
   ASSERT_EQ(parser.GetCompositeValue("input"), "argparser_tests");
   ASSERT_EQ(parser.GetCompositeValue("output"), "./CMakeFiles/argparser_tests.dir");
+}
+
+TEST(ArgParserTestSuite, NegativeCompositeStringTest) {
+  ArgParser parser("My Parser");
+  parser.AddHelp('h', "help", "Some Description about program");
+  parser.AddCompositeArgument('i', "input", "File path for input file").AddValidate(&IsValidFilename).AddIsGood(&IsRegularFile);
+  parser.AddCompositeArgument('o', "output", "File path for output directory").AddValidate(&IsValidFilename).AddIsGood(&IsDirectory);
+  parser.AddFlag('s', "flag1", "Use some logic").Default(true);
+  parser.AddFlag('p', "flag2", "Use some logic");
+  parser.AddIntArgument("number", "Some Number");
+
+  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i argparser_testsERR -o=./CMakeFiles/argparser_tests.dir")));
+  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i argparser_tests -o=./CMakeFiles/argparser_tests.dirERR")));
 }

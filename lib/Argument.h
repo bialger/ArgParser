@@ -52,8 +52,8 @@ class Argument {
   virtual const ArgumentInformation& GetInfo() const = 0;
   virtual size_t GetUsedValues() const = 0;
  protected:
-  virtual size_t ObtainValue(const std::vector<std::string>& argv,
-                           std::vector<size_t>& used_values, size_t position) = 0;
+  virtual size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
+                             std::vector<size_t>& used_values, size_t position) = 0;
 };
 
 } // namespace ArgumentParser

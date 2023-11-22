@@ -29,7 +29,7 @@ class ConcreteArgument : public Argument {
   T* stored_value_;
   std::vector<T>* stored_values_;
 
-  size_t ObtainValue(const std::vector<std::string>& argv,
+  size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
                      std::vector<size_t>& used_values, size_t position) override;
 };
 

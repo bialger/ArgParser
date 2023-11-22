@@ -1,9 +1,8 @@
 #include <functional>
-#include <lib/ArgParser.h>
-
 #include <iostream>
 #include <numeric>
-#include <filesystem>
+
+#include <lib/ArgParser.h>
 
 struct Options {
   bool sum = false;
@@ -25,6 +24,8 @@ int main(int argc, char** argv) {
     std::cout << parser.HelpDescription() << std::endl;
     return 1;
   }
+
+  std::cout << parser.GetIntValue("N", 2) << std::endl;
 
   if (parser.Help()) {
     std::cout << parser.HelpDescription() << std::endl;
