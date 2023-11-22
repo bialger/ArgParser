@@ -22,6 +22,9 @@ ArgumentParser::ArgParser::ArgParser(const char* name) {
 ArgumentParser::ArgParser::~ArgParser() {
   for (size_t i = 0; i < argument_builders_.size(); ++i) {
     delete argument_builders_[i];
+  }
+  
+  for (size_t i = 0; i < arguments_.size(); ++i) {
     delete arguments_[i];
   }
 }
