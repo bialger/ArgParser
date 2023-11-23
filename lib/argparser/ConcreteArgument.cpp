@@ -187,9 +187,9 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
     return position;
   }
 
-  size_t current = position;
+  size_t current = position + (info_.IsGood(value_string) ? 0 : 1);
 
-  while (current < argv.size() &&
+  while (current < argv.size() && argv[current][0] != '-' &&
       value_status_ != ArgumentParsingStatus::kInvalidArgument &&
       value_string.size() < 256 &&
       !info_.IsGood(value_string)) {
@@ -205,7 +205,7 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
   }
 
   if (info_.Validate(value_string) && info_.IsGood(value_string)) {
-    value_ = value_string.data();
+    value_ = value_string.c_str();
     position = current;
     size_t start_position = used_values.back();
 
