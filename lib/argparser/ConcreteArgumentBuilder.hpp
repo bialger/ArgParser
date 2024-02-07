@@ -22,6 +22,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
     default_value_ = T();
     stored_value_ = nullptr;
     stored_values_ = nullptr;
+    was_created_temp_vector_ = false;
   }
 
   ConcreteArgumentBuilder(const ConcreteArgumentBuilder& other) = delete;
@@ -29,7 +30,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
   ConcreteArgumentBuilder& operator=(const ConcreteArgumentBuilder& other) = delete;
 
   ~ConcreteArgumentBuilder() override {
-    if (!info_.has_store_values) {
+    if (was_created_temp_vector_) {
       delete stored_values_;
     }
   }
@@ -82,8 +83,9 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
       info_.minimum_values = 1;
     }
 
-    if (!info_.has_store_values) {
+    if (!info_.has_store_values && !was_created_temp_vector_) {
       stored_values_ = new std::vector<T>;
+      was_created_temp_vector_ = true;
     }
 
     return new ConcreteArgument<T>(info_, default_value_, stored_value_, stored_values_);
@@ -104,6 +106,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
   T default_value_;
   T* stored_value_;
   std::vector<T>* stored_values_;
+  bool was_created_temp_vector_;
 };
 
 } // namespace ArgumentParser

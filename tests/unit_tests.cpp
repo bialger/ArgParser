@@ -207,3 +207,31 @@ TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest2) {
 
   ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o=./aiejfpeqjfoiqwd")));
 }
+
+TEST_F(ArgParserUnitTestSuite, RepeatedParsingTest) {
+  ArgParser parser("My Parser");
+  parser.AddHelp('h', "help", "Some Description about program");
+  parser.AddCompositeArgument('i',
+                              "input",
+                              "File path for input file").AddValidate(&IsValidFilename).AddIsGood(&IsRegularFile);
+  parser.AddCompositeArgument('o',
+                              "output",
+                              "File path for output directory").AddValidate(&IsValidFilename).AddIsGood(&IsDirectory);
+  parser.AddFlag('s', "flag1", "Test is a file").Default(true);
+  parser.AddFlag('p', "flag2", "Test is directory");
+  parser.AddIntArgument("number", "Some Number");
+  ConcreteArgumentBuilder<CompositeString>* test_argument_ptr =
+      &parser.AddCompositeArgument('t', "test", "File path for test").AddValidate(&IsValidFilename);
+
+  ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName
+                                           + " --test=" + kTemporaryFileName)));
+
+  if (parser.GetFlag("flag1")) {
+    test_argument_ptr->AddIsGood(&IsRegularFile);
+  } else if (parser.GetFlag("flag2")) {
+    test_argument_ptr->AddIsGood(&IsDirectory);
+  }
+
+  ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o="
+                                           + kTemporaryDirectoryName + " --test=" + kTemporaryFileName)));
+}

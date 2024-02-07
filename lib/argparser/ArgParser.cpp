@@ -25,12 +25,12 @@ ArgumentParser::ArgParser::ArgParser(const char* name) {
 }
 
 ArgumentParser::ArgParser::~ArgParser() {
-  for (size_t i = 0; i < argument_builders_.size(); ++i) {
-    delete argument_builders_[i];
+  for (ArgumentBuilder*& argument_builder : argument_builders_) {
+    delete argument_builder;
   }
 
-  for (size_t i = 0; i < arguments_.size(); ++i) {
-    delete arguments_[i];
+  for (Argument*& argument : arguments_) {
+    delete argument;
   }
 }
 
@@ -260,6 +260,7 @@ void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::
 void ArgumentParser::ArgParser::RefreshArguments() {
   for (Argument* argument : arguments_) {
     argument->ClearStored();
+    delete argument;
   }
 
   arguments_.clear();
