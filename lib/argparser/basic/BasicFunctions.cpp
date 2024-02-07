@@ -67,8 +67,7 @@ bool IsValidFilename(std::string& pre_filename) {
     for (uint64_t position = 2; position < pre_filename.size(); ++position) {
       char current = pre_filename[position];
       if (!(std::isalnum(current) || current == '\\' || current == '.' ||
-          current == '-' || current == ' ')) {
-        std::cout << "Bad symbol in " + pre_filename + ": " << current << '\n';
+          current == '-' || current == ' ' || current == '_')) {
         return false;
       }
     }
