@@ -1,36 +1,7 @@
-#include <limits>
-
 #include "ConcreteArgument.hpp"
 
-template
-class ArgumentParser::ConcreteArgument<int16_t>;
-template
-class ArgumentParser::ConcreteArgument<int32_t>;
-template
-class ArgumentParser::ConcreteArgument<int64_t>;
-template
-class ArgumentParser::ConcreteArgument<uint16_t>;
-template
-class ArgumentParser::ConcreteArgument<uint32_t>;
-template
-class ArgumentParser::ConcreteArgument<uint64_t>;
-template
-class ArgumentParser::ConcreteArgument<float>;
-template
-class ArgumentParser::ConcreteArgument<double>;
-template
-class ArgumentParser::ConcreteArgument<long double>;
-template
-class ArgumentParser::ConcreteArgument<bool>;
-template
-class ArgumentParser::ConcreteArgument<char>;
-template
-class ArgumentParser::ConcreteArgument<std::string>;
-template
-class ArgumentParser::ConcreteArgument<CompositeString>;
-
 template<>
-size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<std::string>& argv,
                                                               std::string& value_string,
                                                               std::vector<size_t>& used_values,
                                                               size_t position) {
@@ -52,7 +23,7 @@ size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<std::string>& argv,
                                                               std::string& value_string,
                                                               std::vector<size_t>& used_values,
                                                               size_t position) {
@@ -74,7 +45,7 @@ size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::vector<std::string>& argv,
                                                               std::string& value_string,
                                                               std::vector<size_t>& used_values,
                                                               size_t position) {
@@ -96,7 +67,7 @@ size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::vector<
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std::vector<std::string>& argv,
                                                                std::string& value_string,
                                                                std::vector<size_t>& used_values,
                                                                size_t position) {
@@ -118,7 +89,7 @@ size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std::vector
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std::vector<std::string>& argv,
                                                                std::string& value_string,
                                                                std::vector<size_t>& used_values,
                                                                size_t position) {
@@ -140,7 +111,7 @@ size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std::vector
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std::vector<std::string>& argv,
                                                                std::string& value_string,
                                                                std::vector<size_t>& used_values,
                                                                size_t position) {
@@ -162,7 +133,7 @@ size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std::vector
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::vector<std::string>& argv,
                                                             std::string& value_string,
                                                             std::vector<size_t>& used_values,
                                                             size_t position) {
@@ -184,7 +155,7 @@ size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::vector<st
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::vector<std::string>& argv,
                                                              std::string& value_string,
                                                              std::vector<size_t>& used_values,
                                                              size_t position) {
@@ -206,7 +177,7 @@ size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::vector<s
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const std::vector<std::string>& argv,
                                                                   std::string& value_string,
                                                                   std::vector<size_t>& used_values,
                                                                   size_t position) {
@@ -228,7 +199,7 @@ size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const std::vec
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<bool>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<bool>::ObtainValue(const std::vector<std::string>& argv,
                                                            std::string& value_string,
                                                            std::vector<size_t>& used_values,
                                                            size_t position) {
@@ -244,7 +215,7 @@ size_t ArgumentParser::ConcreteArgument<bool>::ObtainValue(const std::vector<std
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std::string>& argv,
                                                            std::string& value_string,
                                                            std::vector<size_t>& used_values,
                                                            size_t position) {
@@ -353,7 +324,7 @@ size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const std::vector<std::string>& argv,
                                                                   std::string& value_string,
                                                                   std::vector<size_t>& used_values,
                                                                   size_t position) {
@@ -367,7 +338,7 @@ size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const std::vec
 }
 
 template<>
-size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std::vector<std::string>& argv,
+inline size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std::vector<std::string>& argv,
                                                                       std::string& value_string,
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {

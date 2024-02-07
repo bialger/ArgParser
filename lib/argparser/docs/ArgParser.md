@@ -15,7 +15,7 @@
 ## Зависимости
 
 Зависит от [BasicFunctions.cpp](../basic/BasicFunctions.cpp), 
-[ConcreteArgument.cpp](../ConcreteArgument.cpp), 
+[ConcreteArgument.cpp](../ConcreteArgument.inl), 
 [ConcreteArgumentBuilder.hpp](../ConcreteArgumentBuilder.hpp).
 
 ## Публичные поля
