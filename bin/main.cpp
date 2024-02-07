@@ -25,8 +25,6 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  std::cout << parser.GetIntValue("N", 2) << std::endl;
-
   if (parser.Help()) {
     std::cout << parser.HelpDescription() << std::endl;
     return 0;
@@ -35,7 +33,7 @@ int main(int argc, char** argv) {
   if (opt.sum) {
     std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 0) << std::endl;
   } else if (opt.mult) {
-    std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 1, std::multiplies<int>()) << std::endl;
+    std::cout << "Result: " << std::accumulate(values.begin(), values.end(), 1, std::multiplies<>()) << std::endl;
   } else {
     std::cout << "No one options had chosen" << std::endl;
     std::cout << parser.HelpDescription();
