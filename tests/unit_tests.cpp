@@ -2,17 +2,18 @@
 
 #include "lib/argparser/ArgParser.h"
 #include "test_functions.hpp"
+#include "ArgParserUnitTestSuite.hpp"
 #include <gtest/gtest.h>
 
 using namespace ArgumentParser;
 
-TEST(ArgParserTestSuite, EmptyTest) {
+TEST_F(ArgParserUnitTestSuite, EmptyTest) {
   ArgParser parser("My Empty Parser");
 
   ASSERT_TRUE(parser.Parse(SplitString("app")));
 }
 
-TEST(ArgParserTestSuite, StringTest) {
+TEST_F(ArgParserUnitTestSuite, StringTest) {
   ArgParser parser("My Parser");
   parser.AddStringArgument("param1");
 
@@ -20,7 +21,7 @@ TEST(ArgParserTestSuite, StringTest) {
   ASSERT_EQ(parser.GetStringValue("param1"), "value1");
 }
 
-TEST(ArgParserTestSuite, ShortNameTest) {
+TEST_F(ArgParserUnitTestSuite, ShortNameTest) {
   ArgParser parser("My Parser");
   parser.AddStringArgument('p', "param1");
 
@@ -28,7 +29,7 @@ TEST(ArgParserTestSuite, ShortNameTest) {
   ASSERT_EQ(parser.GetStringValue("param1"), "value1");
 }
 
-TEST(ArgParserTestSuite, DefaultTest) {
+TEST_F(ArgParserUnitTestSuite, DefaultTest) {
   ArgParser parser("My Parser");
   parser.AddStringArgument("param1").Default("value1");
 
@@ -36,14 +37,14 @@ TEST(ArgParserTestSuite, DefaultTest) {
   ASSERT_EQ(parser.GetStringValue("param1"), "value1");
 }
 
-TEST(ArgParserTestSuite, NoDefaultTest) {
+TEST_F(ArgParserUnitTestSuite, NoDefaultTest) {
   ArgParser parser("My Parser");
   parser.AddStringArgument("param1");
 
   ASSERT_FALSE(parser.Parse(SplitString("app")));
 }
 
-TEST(ArgParserTestSuite, StoreValueTest) {
+TEST_F(ArgParserUnitTestSuite, StoreValueTest) {
   ArgParser parser("My Parser");
   std::string value;
   parser.AddStringArgument("param1").StoreValue(value);
@@ -52,7 +53,7 @@ TEST(ArgParserTestSuite, StoreValueTest) {
   ASSERT_EQ(value, "value1");
 }
 
-TEST(ArgParserTestSuite, MultiStringTest) {
+TEST_F(ArgParserUnitTestSuite, MultiStringTest) {
   ArgParser parser("My Parser");
   std::string value;
   parser.AddStringArgument("param1").StoreValue(value);
@@ -62,7 +63,7 @@ TEST(ArgParserTestSuite, MultiStringTest) {
   ASSERT_EQ(parser.GetStringValue("param2"), "value2");
 }
 
-TEST(ArgParserTestSuite, IntTest) {
+TEST_F(ArgParserUnitTestSuite, IntTest) {
   ArgParser parser("My Parser");
   parser.AddIntArgument("param1");
 
@@ -70,7 +71,7 @@ TEST(ArgParserTestSuite, IntTest) {
   ASSERT_EQ(parser.GetIntValue("param1"), 100500);
 }
 
-TEST(ArgParserTestSuite, MultiValueTest) {
+TEST_F(ArgParserUnitTestSuite, MultiValueTest) {
   ArgParser parser("My Parser");
   std::vector<int> int_values;
   parser.AddIntArgument('p', "param1").MultiValue().StoreValues(int_values);
@@ -81,7 +82,7 @@ TEST(ArgParserTestSuite, MultiValueTest) {
   ASSERT_EQ(int_values[2], 3);
 }
 
-TEST(ArgParserTestSuite, MinCountMultiValueTest) {
+TEST_F(ArgParserUnitTestSuite, MinCountMultiValueTest) {
   ArgParser parser("My Parser");
   std::vector<int> int_values;
   size_t MinArgsCount = 10;
@@ -90,7 +91,7 @@ TEST(ArgParserTestSuite, MinCountMultiValueTest) {
   ASSERT_FALSE(parser.Parse(SplitString("app --param1=1 --param1=2 --param1=3")));
 }
 
-TEST(ArgParserTestSuite, FlagTest) {
+TEST_F(ArgParserUnitTestSuite, FlagTest) {
   ArgParser parser("My Parser");
   parser.AddFlag('f', "flag1");
 
@@ -98,7 +99,7 @@ TEST(ArgParserTestSuite, FlagTest) {
   ASSERT_TRUE(parser.GetFlag("flag1"));
 }
 
-TEST(ArgParserTestSuite, FlagsTest) {
+TEST_F(ArgParserUnitTestSuite, FlagsTest) {
   ArgParser parser("My Parser");
   bool flag3;
   parser.AddFlag('a', "flag1");
@@ -111,7 +112,7 @@ TEST(ArgParserTestSuite, FlagsTest) {
   ASSERT_TRUE(flag3);
 }
 
-TEST(ArgParserTestSuite, PositionalArgTest) {
+TEST_F(ArgParserUnitTestSuite, PositionalArgTest) {
   ArgParser parser("My Parser");
   std::vector<int> values;
   parser.AddIntArgument("Param1").MultiValue(1).Positional().StoreValues(values);
@@ -122,7 +123,7 @@ TEST(ArgParserTestSuite, PositionalArgTest) {
   ASSERT_EQ(values.size(), 5);
 }
 
-TEST(ArgParserTestSuite, HelpTest) {
+TEST_F(ArgParserUnitTestSuite, HelpTest) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
 
@@ -130,7 +131,7 @@ TEST(ArgParserTestSuite, HelpTest) {
   ASSERT_TRUE(parser.Help());
 }
 
-TEST(ArgParserTestSuite, HelpStringTest) {
+TEST_F(ArgParserUnitTestSuite, HelpStringTest) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
   parser.AddStringArgument('i', "input", "File path for input file").MultiValue(1);
@@ -155,7 +156,7 @@ TEST(ArgParserTestSuite, HelpStringTest) {
   );
 }
 
-TEST(ArgParserTestSuite, CompositeStringTest) {
+TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
   parser.AddCompositeArgument('i',
@@ -168,13 +169,14 @@ TEST(ArgParserTestSuite, CompositeStringTest) {
   parser.AddFlag('p', "flag2", "Use some logic");
   parser.AddIntArgument("number", "Some Number");
 
-  ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i argparser_tests -o=./CMakeFiles/argparser_tests.dir")));
+  ASSERT_TRUE(parser.Parse(SplitString(
+      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName)));
 
-  ASSERT_EQ(parser.GetCompositeValue("input"), "argparser_tests");
-  ASSERT_EQ(parser.GetCompositeValue("output"), "./CMakeFiles/argparser_tests.dir");
+  ASSERT_EQ(parser.GetCompositeValue("input"), kTemporaryFileName);
+  ASSERT_EQ(parser.GetCompositeValue("output"), kTemporaryDirectoryName);
 }
 
-TEST(ArgParserTestSuite, NegativeCompositeStringTest) {
+TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
   parser.AddCompositeArgument('i',
@@ -187,6 +189,6 @@ TEST(ArgParserTestSuite, NegativeCompositeStringTest) {
   parser.AddFlag('p', "flag2", "Use some logic");
   parser.AddIntArgument("number", "Some Number");
 
-  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i argparser_testsERR -o=./CMakeFiles/argparser_tests.dir")));
-  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i argparser_tests -o=./CMakeFiles/argparser_tests.dirERR")));
+  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i hfeooohfe -o=" + kTemporaryDirectoryName)));
+  ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o=./aiejfpeqjfoiqwd")));
 }
