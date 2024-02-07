@@ -170,13 +170,13 @@ TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   parser.AddIntArgument("number", "Some Number");
 
   ASSERT_TRUE(parser.Parse(SplitString(
-      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName)));
+      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName), {std::cout, true}));
 
   ASSERT_EQ(parser.GetCompositeValue("input"), kTemporaryFileName);
   ASSERT_EQ(parser.GetCompositeValue("output"), kTemporaryDirectoryName);
 }
 
-TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest) {
+TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest1) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
   parser.AddCompositeArgument('i',
@@ -190,5 +190,20 @@ TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest) {
   parser.AddIntArgument("number", "Some Number");
 
   ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i hfeooohfe -o=" + kTemporaryDirectoryName)));
+}
+
+TEST_F(ArgParserUnitTestSuite, NegativeCompositeStringTest2) {
+  ArgParser parser("My Parser");
+  parser.AddHelp('h', "help", "Some Description about program");
+  parser.AddCompositeArgument('i',
+                              "input",
+                              "File path for input file").AddValidate(&IsValidFilename).AddIsGood(&IsRegularFile);
+  parser.AddCompositeArgument('o',
+                              "output",
+                              "File path for output directory").AddValidate(&IsValidFilename).AddIsGood(&IsDirectory);
+  parser.AddFlag('s', "flag1", "Use some logic").Default(true);
+  parser.AddFlag('p', "flag2", "Use some logic");
+  parser.AddIntArgument("number", "Some Number");
+
   ASSERT_FALSE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o=./aiejfpeqjfoiqwd")));
 }
