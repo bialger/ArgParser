@@ -1,7 +1,7 @@
-#ifndef ARGUMENTBUILDER_H_
-#define ARGUMENTBUILDER_H_
+#ifndef ARGUMENTBUILDER_HPP_
+#define ARGUMENTBUILDER_HPP_
 
-#include "Argument.h"
+#include "Argument.hpp"
 
 namespace ArgumentParser {
 
@@ -15,4 +15,4 @@ class ArgumentBuilder {
 
 } // namespace ArgumentParser
 
-#endif //ARGUMENTBUILDER_H_
+#endif //ARGUMENTBUILDER_HPP_

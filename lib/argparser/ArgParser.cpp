@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "ArgParser.h"
+#include "ArgParser.hpp"
 
 ArgumentParser::ArgParser::ArgParser(const char* name) {
   name_ = name;

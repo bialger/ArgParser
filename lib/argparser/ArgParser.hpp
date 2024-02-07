@@ -1,5 +1,5 @@
-#ifndef ARGPARSER_H_
-#define ARGPARSER_H_
+#ifndef ARGPARSER_HPP_
+#define ARGPARSER_HPP_
 
 #define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
 template<typename... Args> \
@@ -104,4 +104,4 @@ class ArgParser {
 
 } // namespace ArgumentParser
 
-#endif // ARGPARSER_H_
+#endif // ARGPARSER_HPP_

@@ -1,7 +1,7 @@
 #ifndef CONCRETEARGUMENT_HPP_
 #define CONCRETEARGUMENT_HPP_
 
-#include "Argument.h"
+#include "Argument.hpp"
 
 namespace ArgumentParser {
 

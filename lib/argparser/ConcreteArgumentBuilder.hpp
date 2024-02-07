@@ -3,7 +3,7 @@
 
 #include <sstream>
 
-#include "ArgumentBuilder.h"
+#include "ArgumentBuilder.hpp"
 #include "ConcreteArgument.hpp"
 
 namespace ArgumentParser {

@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include "lib/argparser/ArgParser.h"
+#include "lib/argparser/ArgParser.hpp"
 #include "test_functions.hpp"
 #include "ArgParserUnitTestSuite.hpp"
 #include <gtest/gtest.h>
