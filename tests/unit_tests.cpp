@@ -168,12 +168,9 @@ TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   parser.AddFlag('s', "flag1", "Use some logic").Default(true);
   parser.AddFlag('p', "flag2", "Use some logic");
   parser.AddIntArgument("number", "Some Number");
-  std::cout << kTemporaryDirectoryName << " " << kTemporaryFileName << '\n';
-  ASSERT_TRUE(IsDirectory(const_cast<std::string&>(kTemporaryDirectoryName)));
-  ASSERT_TRUE(IsRegularFile(const_cast<std::string&>(kTemporaryFileName)));
 
   ASSERT_TRUE(parser.Parse(SplitString(
-      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName), {std::cout, true}));
+      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName)));
 
   ASSERT_EQ(parser.GetCompositeValue("input"), kTemporaryFileName);
   ASSERT_EQ(parser.GetCompositeValue("output"), kTemporaryDirectoryName);

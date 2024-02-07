@@ -486,7 +486,6 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {
   if (!info_.Validate(value_string)) {
-    std::cout <<"1 " +  value_string;
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
     return position;
   }
@@ -501,7 +500,6 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
     value_string += argv[current];
 
     if (!info_.Validate(value_string)) {
-      std::cout << "2 " + value_string;
       value_status_ = ArgumentParsingStatus::kInvalidArgument;
       break;
     }
@@ -518,7 +516,6 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
       used_values.push_back(i);
     }
   } else {
-    std::cout << "3 " + value_string;
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
   }
 
