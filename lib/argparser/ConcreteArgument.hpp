@@ -9,7 +9,7 @@ template<typename T>
 class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
-  ConcreteArgument(ArgumentInformation info, T default_value, T* stored_value, std::vector<T>* stored_values);
+  ConcreteArgument(const ArgumentInformation& info, T default_value, T* stored_value, std::vector<T>* stored_values);
   T GetValue(size_t index) const;
   std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) override;
   bool CheckLimit() override;
@@ -30,6 +30,19 @@ class ConcreteArgument : public Argument {
   size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
                      std::vector<size_t>& used_values, size_t position) override;
 };
+template<typename T>
+ConcreteArgument<T>::ConcreteArgument(const ArgumentInformation& info,
+                                      T default_value,
+                                      T* stored_value,
+                                      std::vector<T>* stored_values) {
+  info_ = info;
+  value_ = default_value;
+  value_counter_ = 0;
+  value_status_ = ArgumentParsingStatus::kNoArgument;
+  default_value_ = default_value;
+  stored_value_ = stored_value;
+  stored_values_ = stored_values;
+}
 
 }
 
