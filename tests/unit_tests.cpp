@@ -168,7 +168,7 @@ TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   parser.AddFlag('s', "flag1", "Use some logic").Default(true);
   parser.AddFlag('p', "flag2", "Use some logic");
   parser.AddIntArgument("number", "Some Number");
-  std::cout << kTemporaryDirectoryName << " " << kTemporaryDirectoryName << '\n';
+  std::cout << kTemporaryDirectoryName << " " << kTemporaryFileName << '\n';
   ASSERT_TRUE(IsDirectory(const_cast<std::string&>(kTemporaryDirectoryName)));
   ASSERT_TRUE(IsRegularFile(const_cast<std::string&>(kTemporaryFileName)));
 

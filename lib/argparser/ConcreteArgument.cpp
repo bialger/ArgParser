@@ -159,7 +159,7 @@ size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<
     errno = save_errno;
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
   } else {
-    value_ = pre_value;
+    value_ = static_cast<int16_t>(pre_value);
   }
 
   return position;

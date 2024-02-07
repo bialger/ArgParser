@@ -8,7 +8,7 @@
 #include "lib/argparser/basic/BasicFunctions.hpp"
 
 struct ArgParserUnitTestSuite : public testing::Test { // special test structure
-  const std::string kTemporaryDirectoryName = std::string(".") + (IsWindows() ? "\\" : "/") + "gtest_tmp";
+  const std::string kTemporaryDirectoryName = (IsWindows() ? "" : "./") + std::string("gtest_tmp");
   const std::string kTemporaryFileName = kTemporaryDirectoryName + (IsWindows() ? "\\" : "/") + "temp_file";
 
   void SetUp() override; // method that is called at the beginning of every test
