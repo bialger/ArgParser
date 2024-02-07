@@ -59,4 +59,3 @@ class Argument {
 } // namespace ArgumentParser
 
 #endif //ARGUMENT_H_
-

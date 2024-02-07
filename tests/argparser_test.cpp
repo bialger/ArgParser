@@ -1,19 +1,10 @@
 #include <sstream>
 
 #include "lib/argparser/ArgParser.h"
+#include "test_functions.hpp"
 #include <gtest/gtest.h>
 
 using namespace ArgumentParser;
-
-/*
-    Функция принимает в качество аргумента строку, разделяет ее по "пробелу"
-    и возвращает вектор полученных слов
-*/
-std::vector<std::string> SplitString(const std::string& str) {
-  std::istringstream iss(str);
-
-  return {std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>()};
-}
 
 TEST(ArgParserTestSuite, EmptyTest) {
   ArgParser parser("My Empty Parser");

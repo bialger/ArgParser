@@ -218,4 +218,3 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
 
   return position;
 }
-

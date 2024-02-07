@@ -15,6 +15,8 @@ enable_testing()
 add_executable(
         argparser_tests
         argparser_test.cpp
+        test_functions.cpp
+        test_functions.hpp
 )
 
 target_link_libraries(
