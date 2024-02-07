@@ -64,7 +64,7 @@ jobs:
           )
           
           if (NOT result EQUAL 0)
-            message(FATAL_ERROR "Running tests failed!")
+            message(FATAL_ERROR "Creating cache failed!")
           endif()
           
           execute_process(
@@ -74,12 +74,12 @@ jobs:
           )
           
           if (NOT result EQUAL 0)
-            message(FATAL_ERROR "Running tests failed!")
+            message(FATAL_ERROR "Creating cache failed!")
           endif()
 
       - name: Build main target
         run: |
-          cmake --build cmake-build-release --target argparser
+          cmake --build cmake-build-release --target labwork4 
 
       - name: Build tests target
         run: |
@@ -91,9 +91,9 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
               cd Debug
-              ./argparser.exe --help
+              ./labwork4.exe --help
           else 
-              ./argparser --help
+              ./labwork4 --help
           fi
 
       - name: Run tests
