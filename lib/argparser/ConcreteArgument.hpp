@@ -16,7 +16,6 @@ class ConcreteArgument : public Argument {
   std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) override;
   bool CheckLimit() override;
   ArgumentParsingStatus GetValueStatus() const override;
-  const std::string& GetType() const override;
   const ArgumentInformation& GetInfo() const override;
   size_t GetUsedValues() const override;
   void ClearStored() override;
@@ -58,11 +57,6 @@ T ConcreteArgument<T>::GetValue(size_t index) const {
 template<typename T>
 ArgumentParsingStatus ConcreteArgument<T>::GetValueStatus() const {
   return value_status_;
-}
-
-template<typename T>
-const std::string& ConcreteArgument<T>::GetType() const {
-  return info_.type;
 }
 
 template<typename T>

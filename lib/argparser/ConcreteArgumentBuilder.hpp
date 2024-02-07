@@ -18,7 +18,6 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
     info_.short_key = short_name;
     info_.long_key = long_name;
     info_.description = description;
-    info_.type = typeid(T).name();
     default_value_ = T();
     stored_value_ = nullptr;
     stored_values_ = nullptr;

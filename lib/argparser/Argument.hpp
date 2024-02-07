@@ -31,7 +31,6 @@ struct ArgumentInformation {
   char short_key = kBadChar;
   const char* long_key = "";
   const char* description = "";
-  std::string type;
   size_t minimum_values = 0;
   bool is_multi_value = false;
   bool is_positional = false;
@@ -47,7 +46,6 @@ class Argument {
   virtual std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) = 0;
   virtual bool CheckLimit() = 0;
   virtual ArgumentParsingStatus GetValueStatus() const = 0;
-  virtual const std::string& GetType() const = 0;
   virtual const ArgumentInformation& GetInfo() const = 0;
   virtual size_t GetUsedValues() const = 0;
   virtual void ClearStored() = 0;
