@@ -12,13 +12,13 @@ class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
   ConcreteArgument(const ArgumentInformation& info, T default_value, T* stored_value, std::vector<T>* stored_values);
-  T GetValue(size_t index) const;
+  [[nodiscard]] T GetValue(size_t index) const;
   std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) override;
   bool CheckLimit() override;
-  ArgumentParsingStatus GetValueStatus() const override;
-  const std::string& GetType() const override;
-  const ArgumentInformation& GetInfo() const override;
-  size_t GetUsedValues() const override;
+  [[nodiscard]] ArgumentParsingStatus GetValueStatus() const override;
+  [[nodiscard]] const std::string& GetType() const override;
+  [[nodiscard]] const ArgumentInformation& GetInfo() const override;
+  [[nodiscard]] size_t GetUsedValues() const override;
   void ClearStored() override;
  private:
   ArgumentInformation info_;

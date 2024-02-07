@@ -47,10 +47,10 @@ class Argument {
   virtual ~Argument() = default;
   virtual std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) = 0;
   virtual bool CheckLimit() = 0;
-  virtual ArgumentParsingStatus GetValueStatus() const = 0;
-  virtual const std::string& GetType() const = 0;
-  virtual const ArgumentInformation& GetInfo() const = 0;
-  virtual size_t GetUsedValues() const = 0;
+  [[nodiscard]] virtual ArgumentParsingStatus GetValueStatus() const = 0;
+  [[nodiscard]] virtual const std::string& GetType() const = 0;
+  [[nodiscard]] virtual const ArgumentInformation& GetInfo() const = 0;
+  [[nodiscard]] virtual size_t GetUsedValues() const = 0;
   virtual void ClearStored() = 0;
  protected:
   virtual size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,

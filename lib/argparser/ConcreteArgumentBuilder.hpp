@@ -91,11 +91,11 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
     return new ConcreteArgument<T>(info_, default_value_, stored_value_, stored_values_);
   }
 
-  const ArgumentInformation& GetInfo() const override {
+  [[nodiscard]] const ArgumentInformation& GetInfo() const override {
     return info_;
   }
 
-  std::string GetDefaultValue() const override {
+  [[nodiscard]] std::string GetDefaultValue() const override {
     std::ostringstream stream;
     stream << default_value_;
     return stream.str();
