@@ -4,9 +4,14 @@
 
 ArgumentParser::ArgParser::ArgParser(const char* name) {
   name_ = name;
-  allowed_typenames_ = {typeid(std::string).name(), typeid(bool).name(),
-                        typeid(int32_t).name(), typeid(CompositeString).name()};
-  allowed_typenames_for_help_ = {"string", "bool", "int", "CompositeString"};
+  allowed_typenames_ =
+      {typeid(std::string).name(), typeid(CompositeString).name(), typeid(int16_t).name(), typeid(int32_t).name(),
+       typeid(int64_t).name(), typeid(uint16_t).name(), typeid(uint32_t).name(), typeid(uint64_t).name(),
+       typeid(float).name(), typeid(double).name(), typeid(long double).name(), typeid(bool).name(),
+       typeid(char).name()};
+  allowed_typenames_for_help_ =
+      {"string", "CompositeString", "short", "int", "long long", "unsigned short", "unsigned int", "unsigned long long",
+       "float", "double", "long double", "bool", "char"};
   argument_builders_ = {};
   arguments_ = {};
   arguments_by_type_ = {};

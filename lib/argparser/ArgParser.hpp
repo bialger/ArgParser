@@ -49,13 +49,31 @@ class ArgParser {
     return GetValue_<T>(long_name, index);
   }
 
-  ALIAS_TEMPLATE_FUNCTION(AddFlag, AddArgument<bool>);
-  ALIAS_TEMPLATE_FUNCTION(AddStringArgument, AddArgument<std::string>);
+  ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
   ALIAS_TEMPLATE_FUNCTION(AddIntArgument, AddArgument<int32_t>);
+  ALIAS_TEMPLATE_FUNCTION(AddLongLongArgument, AddArgument<int64_t>);
+  ALIAS_TEMPLATE_FUNCTION(AddUnsignedShortArgument, AddArgument<uint16_t>);
+  ALIAS_TEMPLATE_FUNCTION(AddUnsignedIntArgument, AddArgument<uint32_t>);
+  ALIAS_TEMPLATE_FUNCTION(AddUnsignedLongLongArgument, AddArgument<uint64_t>);
+  ALIAS_TEMPLATE_FUNCTION(AddFloatArgument, AddArgument<float>);
+  ALIAS_TEMPLATE_FUNCTION(AddDoubleArgument, AddArgument<double>);
+  ALIAS_TEMPLATE_FUNCTION(AddLongDoubleArgument, AddArgument<long double>);
+  ALIAS_TEMPLATE_FUNCTION(AddFlag, AddArgument<bool>);
+  ALIAS_TEMPLATE_FUNCTION(AddCharArgument, AddArgument<char>);
+  ALIAS_TEMPLATE_FUNCTION(AddStringArgument, AddArgument<std::string>);
   ALIAS_TEMPLATE_FUNCTION(AddCompositeArgument, AddArgument<CompositeString>);
 
-  ALIAS_TEMPLATE_FUNCTION(GetFlag, GetValue<bool>);
+  ALIAS_TEMPLATE_FUNCTION(GetShortValue, GetValue<int16_t>);
   ALIAS_TEMPLATE_FUNCTION(GetIntValue, GetValue<int32_t>);
+  ALIAS_TEMPLATE_FUNCTION(GetLongLongValue, GetValue<int64_t>);
+  ALIAS_TEMPLATE_FUNCTION(GetUnsignedShortValue, GetValue<uint16_t>);
+  ALIAS_TEMPLATE_FUNCTION(GetUnsignedIntValue, GetValue<uint32_t>);
+  ALIAS_TEMPLATE_FUNCTION(GetUnsignedLongLongValue, GetValue<uint64_t>);
+  ALIAS_TEMPLATE_FUNCTION(GetFloatValue, GetValue<float>);
+  ALIAS_TEMPLATE_FUNCTION(GetDoubleValue, GetValue<double>);
+  ALIAS_TEMPLATE_FUNCTION(GetLongDoubleValue, GetValue<long double>);
+  ALIAS_TEMPLATE_FUNCTION(GetFlag, GetValue<bool>);
+  ALIAS_TEMPLATE_FUNCTION(GetChar, GetValue<char>);
   ALIAS_TEMPLATE_FUNCTION(GetStringValue, GetValue<std::string>);
   ALIAS_TEMPLATE_FUNCTION(GetCompositeValue, GetValue<CompositeString>);
  private:

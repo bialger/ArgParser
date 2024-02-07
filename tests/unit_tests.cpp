@@ -148,9 +148,9 @@ TEST_F(ArgParserUnitTestSuite, HelpStringTest) {
       "\n"
       "OPTIONS:\n"
       "-i,  --input=<string>:  File path for input file [repeated, min args = 1]\n"
+      "     --number=<int>:  Some Number\n"
       "-s,  --flag1:  Use some logic [default = true]\n"
       "-p,  --flag2:  Use some logic\n"
-      "     --number=<int>:  Some Number\n"
       "\n"
       "-h,  --help:  Display this help and exit\n"
   );
