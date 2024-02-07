@@ -172,8 +172,8 @@ TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   ASSERT_TRUE(IsDirectory(const_cast<std::string&>(kTemporaryDirectoryName)));
   ASSERT_TRUE(IsRegularFile(const_cast<std::string&>(kTemporaryFileName)));
 
-  ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i \"" + kTemporaryFileName + "\"" + " -o=\""
-                                           + kTemporaryDirectoryName + "\""), {std::cout, true}));
+  ASSERT_TRUE(parser.Parse(SplitString(
+      "app --number 2 -s -i " + kTemporaryFileName + " -o=" + kTemporaryDirectoryName), {std::cout, true}));
 
   ASSERT_EQ(parser.GetCompositeValue("input"), kTemporaryFileName);
   ASSERT_EQ(parser.GetCompositeValue("output"), kTemporaryDirectoryName);
