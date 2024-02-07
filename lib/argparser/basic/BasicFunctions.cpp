@@ -105,7 +105,7 @@ bool IsDirectory(std::string& dirname) {
  * environments. The dummy functions have minimal functionality and simply
  * return their input parameters. */
 
-#if not (defined _WIN32 || defined _WIN64 || defined __CYGWIN__)
+#if not(defined _WIN32 || defined _WIN64 || defined __CYGWIN__)
 int GetStdHandle(int a) { return a; }
 int SetConsoleTextAttribute(int a, int b) { return a + b; }
 #endif
