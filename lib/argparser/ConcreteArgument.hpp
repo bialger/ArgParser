@@ -20,6 +20,10 @@ class ConcreteArgument : public Argument {
   [[nodiscard]] const ArgumentInformation& GetInfo() const override;
   [[nodiscard]] size_t GetUsedValues() const override;
   void ClearStored() override;
+ protected:
+  inline size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
+                            std::vector<size_t>& used_values, size_t position) override;
+
  private:
   ArgumentInformation info_;
   ArgumentParsingStatus value_status_;
@@ -28,10 +32,8 @@ class ConcreteArgument : public Argument {
   T default_value_;
   T* stored_value_;
   std::vector<T>* stored_values_;
-
-  inline size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
-                     std::vector<size_t>& used_values, size_t position) override;
 };
+
 template<typename T>
 ConcreteArgument<T>::ConcreteArgument(const ArgumentInformation& info,
                                       T default_value,
@@ -101,7 +103,7 @@ void ConcreteArgument<T>::ClearStored() {
 
 template<typename T>
 std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std::string>& argv,
-                                                                          size_t position) {
+                                                          size_t position) {
   std::vector<size_t> used_positions;
   if (stored_values_->empty()) {
     value_status_ = ArgumentParsingStatus::kSuccess;

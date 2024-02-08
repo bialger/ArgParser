@@ -35,19 +35,13 @@ class ArgParser {
   ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
 
   template<typename T>
-  ConcreteArgumentBuilder<T>& AddArgument(char short_name, const char* long_name, const char* description = "") {
-    return AddArgument_<T>(short_name, long_name, description);
-  }
+  ConcreteArgumentBuilder<T>& AddArgument(char short_name, const char* long_name, const char* description = "");
 
   template<typename T>
-  ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "") {
-    return AddArgument_<T>(kBadChar, long_name, description);
-  }
+  ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
 
   template<typename T>
-  T GetValue(const char* long_name, size_t index = 0) {
-    return GetValue_<T>(long_name, index);
-  }
+  T GetValue(const char* long_name, size_t index = 0);
 
   ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
   ALIAS_TEMPLATE_FUNCTION(AddIntArgument, AddArgument<int32_t>);
@@ -76,6 +70,7 @@ class ArgParser {
   ALIAS_TEMPLATE_FUNCTION(GetChar, GetValue<char>);
   ALIAS_TEMPLATE_FUNCTION(GetStringValue, GetValue<std::string>);
   ALIAS_TEMPLATE_FUNCTION(GetCompositeValue, GetValue<CompositeString>);
+
  private:
   const char* name_;
   std::vector<ArgumentBuilder*> argument_builders_;
@@ -97,28 +92,49 @@ class ArgParser {
   void RefreshArguments();
 
   template<typename T>
-  ConcreteArgumentBuilder<T>& AddArgument_(char short_name, const char* long_name, const char* description) {
-    std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
-
-    if (short_name != kBadChar) {
-      short_to_long_names_[short_name] = long_name;
-    }
-
-    (*t_arguments)[long_name] = argument_builders_.size();
-    ConcreteArgumentBuilder<T>* argument_builder = new ConcreteArgumentBuilder<T>(short_name, long_name, description);
-    argument_builders_.push_back(argument_builder);
-
-    return *argument_builder;
-  }
+  ConcreteArgumentBuilder<T>& AddArgument_(char short_name, const char* long_name, const char* description);
 
   template<typename T>
-  T GetValue_(const char* long_name, size_t index) {
-    std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
-    size_t argument_index = t_arguments->at(long_name);
-    ConcreteArgument<T>* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
-    return argument->GetValue(index);
-  }
+  T GetValue_(const char* long_name, size_t index);
 };
+
+template<typename T>
+ConcreteArgumentBuilder<T>& ArgParser::AddArgument(char short_name, const char* long_name, const char* description) {
+  return AddArgument_<T>(short_name, long_name, description);
+}
+
+template<typename T>
+ConcreteArgumentBuilder<T>& ArgParser::AddArgument(const char* long_name, const char* description) {
+  return AddArgument_<T>(kBadChar, long_name, description);
+}
+
+template<typename T>
+T ArgParser::GetValue(const char* long_name, size_t index) {
+  return GetValue_<T>(long_name, index);
+}
+
+template<typename T>
+ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char* long_name, const char* description) {
+  std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
+
+  if (short_name != kBadChar) {
+    short_to_long_names_[short_name] = long_name;
+  }
+
+  (*t_arguments)[long_name] = argument_builders_.size();
+  ConcreteArgumentBuilder<T>* argument_builder = new ConcreteArgumentBuilder<T>(short_name, long_name, description);
+  argument_builders_.push_back(argument_builder);
+
+  return *argument_builder;
+}
+
+template<typename T>
+T ArgParser::GetValue_(const char* long_name, size_t index) {
+  std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
+  size_t argument_index = t_arguments->at(long_name);
+  ConcreteArgument<T>* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
+  return argument->GetValue(index);
+}
 
 } // namespace ArgumentParser
 

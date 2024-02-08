@@ -2,9 +2,9 @@
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                              std::string& value_string,
-                                                              std::vector<size_t>& used_values,
-                                                              size_t position) {
+                                                                     std::string& value_string,
+                                                                     std::vector<size_t>& used_values,
+                                                                     size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -24,9 +24,9 @@ inline size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                              std::string& value_string,
-                                                              std::vector<size_t>& used_values,
-                                                              size_t position) {
+                                                                     std::string& value_string,
+                                                                     std::vector<size_t>& used_values,
+                                                                     size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -46,9 +46,9 @@ inline size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                              std::string& value_string,
-                                                              std::vector<size_t>& used_values,
-                                                              size_t position) {
+                                                                     std::string& value_string,
+                                                                     std::vector<size_t>& used_values,
+                                                                     size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -68,9 +68,9 @@ inline size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                               std::string& value_string,
-                                                               std::vector<size_t>& used_values,
-                                                               size_t position) {
+                                                                      std::string& value_string,
+                                                                      std::vector<size_t>& used_values,
+                                                                      size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -90,9 +90,9 @@ inline size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std:
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                               std::string& value_string,
-                                                               std::vector<size_t>& used_values,
-                                                               size_t position) {
+                                                                      std::string& value_string,
+                                                                      std::vector<size_t>& used_values,
+                                                                      size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -112,9 +112,9 @@ inline size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std:
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std::vector<std::string>& argv,
-                                                               std::string& value_string,
-                                                               std::vector<size_t>& used_values,
-                                                               size_t position) {
+                                                                      std::string& value_string,
+                                                                      std::vector<size_t>& used_values,
+                                                                      size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -134,9 +134,9 @@ inline size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std:
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::vector<std::string>& argv,
-                                                            std::string& value_string,
-                                                            std::vector<size_t>& used_values,
-                                                            size_t position) {
+                                                                   std::string& value_string,
+                                                                   std::vector<size_t>& used_values,
+                                                                   size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -156,9 +156,9 @@ inline size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::ve
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::vector<std::string>& argv,
-                                                             std::string& value_string,
-                                                             std::vector<size_t>& used_values,
-                                                             size_t position) {
+                                                                    std::string& value_string,
+                                                                    std::vector<size_t>& used_values,
+                                                                    size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -178,9 +178,9 @@ inline size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::v
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const std::vector<std::string>& argv,
-                                                                  std::string& value_string,
-                                                                  std::vector<size_t>& used_values,
-                                                                  size_t position) {
+                                                                         std::string& value_string,
+                                                                         std::vector<size_t>& used_values,
+                                                                         size_t position) {
   int32_t save_errno = errno;
   errno = 0;
   char* end;
@@ -200,9 +200,9 @@ inline size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const s
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<bool>::ObtainValue(const std::vector<std::string>& argv,
-                                                           std::string& value_string,
-                                                           std::vector<size_t>& used_values,
-                                                           size_t position) {
+                                                                  std::string& value_string,
+                                                                  std::vector<size_t>& used_values,
+                                                                  size_t position) {
   if (value_string == "0" || value_string == "false") {
     value_ = false;
   } else if (value_string == "1" || value_string == "true") {
@@ -216,9 +216,9 @@ inline size_t ArgumentParser::ConcreteArgument<bool>::ObtainValue(const std::vec
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std::string>& argv,
-                                                           std::string& value_string,
-                                                           std::vector<size_t>& used_values,
-                                                           size_t position) {
+                                                                  std::string& value_string,
+                                                                  std::vector<size_t>& used_values,
+                                                                  size_t position) {
   if (value_string[0] != '\\') {
     if (value_string.size() == 1 && info_.IsGood(value_string)) {
       value_ = value_string[0];
@@ -287,7 +287,7 @@ inline size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vec
 
       if (end == value_string.c_str() || *end != '\0' ||
           ((pre_value <= std::numeric_limits<char>::min() || pre_value >= std::numeric_limits<char>::max()) &&
-              errno == ERANGE) || !info_.IsGood(value_string)) {
+              errno == ERANGE)) {
         errno = save_errno;
         value_status_ = ArgumentParsingStatus::kInvalidArgument;
       } else {
@@ -306,7 +306,7 @@ inline size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vec
 
         if (end == value_string.c_str() || *end != '\0' ||
             ((pre_value <= std::numeric_limits<char>::min() || pre_value >= std::numeric_limits<char>::max()) &&
-                errno == ERANGE) || !info_.IsGood(value_string)) {
+                errno == ERANGE)) {
           errno = save_errno;
           value_status_ = ArgumentParsingStatus::kInvalidArgument;
         } else {
@@ -320,14 +320,19 @@ inline size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vec
     }
   }
 
+  if (!info_.IsGood(value_string)) {
+    value_ = default_value_;
+    value_status_ = ArgumentParsingStatus::kInvalidArgument;
+  }
+
   return position;
 }
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const std::vector<std::string>& argv,
-                                                                  std::string& value_string,
-                                                                  std::vector<size_t>& used_values,
-                                                                  size_t position) {
+                                                                         std::string& value_string,
+                                                                         std::vector<size_t>& used_values,
+                                                                         size_t position) {
   if (info_.IsGood(value_string)) {
     value_ = value_string;
   } else {
@@ -339,9 +344,9 @@ inline size_t ArgumentParser::ConcreteArgument<std::string>::ObtainValue(const s
 
 template<>
 inline size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std::vector<std::string>& argv,
-                                                                      std::string& value_string,
-                                                                      std::vector<size_t>& used_values,
-                                                                      size_t position) {
+                                                                             std::string& value_string,
+                                                                             std::vector<size_t>& used_values,
+                                                                             size_t position) {
   if (!info_.Validate(value_string)) {
     value_status_ = ArgumentParsingStatus::kInvalidArgument;
     return position;
