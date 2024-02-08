@@ -5,18 +5,23 @@
 аргумента (любого из указанных) с указанным ключом, парсинг набора аргументов командной
 строки, а также добавление аргумента указанного типа. Кроме того, он имеет функцию
 составления справки и обработки ошибки в синтаксисе аргументов командной строки, а 
-также их вывода.
+также их вывода. Находится в пространстве имён `ArgumentParser`.
 
 ## Объявление и определение
 
-Объявлен в [ArgParser.h](../ArgParser.hpp). Определен там же (шаблонные функции) и в
-[ArgParser.cpp](../ArgParser.cpp)
+Объявлен в [ArgParser.hpp](../ArgParser.hpp). <br>
+Определен там же (шаблонные функции) и в [ArgParser.cpp](../ArgParser.cpp)
 
 ## Зависимости
 
-Зависит от [BasicFunctions.cpp](../basic/BasicFunctions.cpp), 
-[ConcreteArgument.cpp](../ConcreteArgument.inl), 
+Зависит от [BasicFunctions.hpp](../basic/BasicFunctions.hpp), 
+[ConcreteArgument.hpp](../ConcreteArgument.hpp), 
 [ConcreteArgumentBuilder.hpp](../ConcreteArgumentBuilder.hpp).
+
+## Связанные документы
+
+* Документация класса [ConcreteArgumentBuilder](ConcreteArgumentBuilder.md) - 
+информация о задании параметров аргументов.
 
 ## Публичные поля
 
@@ -33,6 +38,7 @@ explicit ArgParser(const char* name = "");
 Удален конструктор копирования (как и оператор присваивания)
 ```cpp
 ArgParser(const ArgParser& other) = delete;
+ArgParser& operator=(const ArgParser& other) = delete;
 ```
 
 ### Parse
@@ -64,8 +70,7 @@ bool Help();
 ```
 
 ### HelpDescription
-Функция, возвращающая `std::string`, содержащую помощь для пользователя. 
-
+Функция, возвращающая `std::string`, содержащую помощь для пользователя.
 ```cpp
 std::string HelpDescription();
 ```
@@ -77,9 +82,9 @@ Some Description about program
 
 OPTIONS:
 -i,  --input=<string>:  File path for input file [repeated, min args = 1]
+     --number=<int>:  Some Number
 -s,  --flag1:  Use some logic [default = true]
 -p,  --flag2:  Use some logic
-     --number=<int>:  Some Number
 
 -h,  --help:  Display this help and exit
 ```
@@ -98,8 +103,8 @@ T GetValue(const char* long_name, size_t index = 0);
 
 ### AddArgument<T\>
 Шаблонная функция, возвращающая ссылку на экземпляр класса
-`ConcreteArgumentBuilder<T>`, который будет строить аргумент с переданными
-параметрами. Принимает `char` значение короткого ключа,
+[ConcreteArgumentBuilder<T\>](ConcreteArgumentBuilder.md), который будет строить 
+аргумент с переданными параметрами. Принимает `char` значение короткого ключа,
 *constant C-style string* значение длинного ключа и, опционально, *constant C-style
 string* описание ключа (по умолчанию - пустая строка).
 ```cpp
@@ -112,8 +117,8 @@ template<typename T>
 ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
 ```
 
-### AddFlag, AddIntArgument AddStringArgument, AddCompositeArgument
-Функции-псевдонимы для соответственно `AddArgument<bool>`, `AddArgument<int32_t>`,
+### AddFlag, AddShortArgument, ... AddStringArgument, AddCompositeArgument
+Функции-псевдонимы для соответственно `AddArgument<bool>`, `AddArgument<int16_t>`, ...
 `AddArgument<std::string>` и `AddArgument<CompositeString>`
 
 ### AddHelp
@@ -127,6 +132,6 @@ ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, c
 ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
 ```
 
-### GetFlag, GetIntValue, GetStringValue, GetCompositeValue
-Функции-псевдонимы для соответственно `GetValue<bool>`, `GetValue<int32_t>`,
+### GetFlag, GetShortValue, ... GetStringValue, GetCompositeValue
+Функции-псевдонимы для соответственно `GetValue<bool>`, `GetValue<int16_t>`,
 `GetValue<std::string>` и `GetValue<CompositeString>`
