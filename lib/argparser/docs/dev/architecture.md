@@ -30,6 +30,12 @@ flowchart TB
 ---
 title: Diagram of the module ArgParser
 ---
+%%{
+  init: {
+    'theme': 'base',
+    'classDiagram': { 'curve': 'linear' },
+  }
+}%%
 classDiagram
     direction TB
     note for ArgParser "Has pseudonym functions for AddArgument and GetValue for each argument type"
@@ -105,8 +111,8 @@ classDiagram
         +StoreValue(T& value) ConcreteArgumentBuilder&
         +StoreValues(vector~T~ & values) ConcreteArgumentBuilder&
         +Default(T value) ConcreteArgumentBuilder&
-        +AddValidate(bool(* validate)(string&)) ConcreteArgumentBuilder&
-        +AddIsGood(bool(* is_good)(std:: string&)) ConcreteArgumentBuilder&
+        +AddValidate(function~bool(string&)~ validate) ConcreteArgumentBuilder&
+        +AddIsGood(function~bool(string&)~ is_good) ConcreteArgumentBuilder&
         +GetInfo() ArgumentInformation
         +GetDefaultValue() string
         +build() Argument*`
@@ -122,8 +128,8 @@ classDiagram
         +bool has_store_values = false
         +bool has_store_value = false
         +bool has_default = false
-        +bool(* Validate)(string&) = &AlwaysTrue
-        +bool(* IsGood)(string&) = &AlwaysTrue
+        +function~bool(string&)~ validate = &AlwaysTrue
+        ++function~bool(string&)~ is_good = &AlwaysTrue
     }
     class ArgumentParsingStatus {
         <<enumeration>>
@@ -165,7 +171,7 @@ classDiagram
 этого класса должна возвращать функция добавления аргумента из ArgParser, к нему 
 должен обращаться пользователь, добавляя информацию об аргументе. Должен 
 реализовывать функции добавления любой информации про аргумент, представленные в 
-[тестах](../../../../tests/unit_tests.cpp) и функцию построения. Ему должен 
+[тестах](../../../../tests/argparser_unit_tests.cpp) и функцию построения. Ему должен 
 наследовать шаблонизированный класс конкретного Builder, который будет реализовывать 
 вышеуказанный функционал для каждого из типов аргумента.
 

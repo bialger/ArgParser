@@ -14,7 +14,7 @@ enable_testing()
 
 add_executable(
         argparser_tests
-        unit_tests.cpp
+        argparser_unit_tests.cpp
         test_functions.cpp
         test_functions.hpp
         ArgParserUnitTestSuite.cpp
