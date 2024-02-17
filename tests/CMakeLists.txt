@@ -21,10 +21,10 @@ add_executable(
         ArgParserUnitTestSuite.hpp
 )
 
-target_link_libraries(
-        argparser_tests
+target_link_libraries(argparser_tests PUBLIC
         argparser
         GTest::gtest_main
+        PRIVATE argparser_basic
 )
 
 target_include_directories(argparser_tests PUBLIC ${PROJECT_SOURCE_DIR})
