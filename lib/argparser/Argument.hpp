@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 #include "lib/argparser/basic/BasicFunctions.hpp"
 
@@ -11,6 +12,9 @@ class CompositeString : public std::string {
   using base = std::string;
  public:
   using base::base;
+  using base::operator=;
+  using base::operator+=;
+  using base::operator[];
 };
 
 namespace ArgumentParser {
@@ -38,8 +42,8 @@ struct ArgumentInformation {
   bool has_store_values = false;
   bool has_store_value = false;
   bool has_default = false;
-  bool (* Validate)(std::string&) = &AlwaysTrue;
-  bool (* IsGood)(std::string&) = &AlwaysTrue;
+  std::function<bool(std::string&)> validate = [](std::string& value_string) -> bool { return true; };
+  std::function<bool(std::string&)> is_good = [](std::string& value_string) -> bool { return true; };
 };
 
 class Argument {

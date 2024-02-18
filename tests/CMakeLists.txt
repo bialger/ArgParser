@@ -14,17 +14,17 @@ enable_testing()
 
 add_executable(
         argparser_tests
-        unit_tests.cpp
+        argparser_unit_tests.cpp
         test_functions.cpp
         test_functions.hpp
         ArgParserUnitTestSuite.cpp
         ArgParserUnitTestSuite.hpp
 )
 
-target_link_libraries(
-        argparser_tests
+target_link_libraries(argparser_tests PUBLIC
         argparser
         GTest::gtest_main
+        PRIVATE argparser_basic
 )
 
 target_include_directories(argparser_tests PUBLIC ${PROJECT_SOURCE_DIR})
