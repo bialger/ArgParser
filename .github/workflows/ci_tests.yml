@@ -35,47 +35,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Configure
-        shell: cmake -P {0}
-        run: |
-          set(ENV{CC} ${{ matrix.config.cc }})
-          set(ENV{CXX} ${{ matrix.config.cxx }})
-          
-          if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
-            execute_process(
-              COMMAND "${{ matrix.config.environment_script }}" && set
-              OUTPUT_FILE environment_script_output.txt
-            )
-            file(STRINGS environment_script_output.txt output_lines)
-            foreach(line IN LISTS output_lines)
-              if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
-                set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
-              endif()
-            endforeach()
-          endif()
-
       - name: Create CMake cache
-        shell: cmake -P {0}
+        shell: bash
         run: |
-          execute_process(
-            COMMAND cmake -S . -B cmake-build-release -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_BUILD_TYPE=Release
-            RESULT_WORKING_DIRECTORY build
-            RESULT_VARIABLE result
-          )
-          
-          if (NOT result EQUAL 0)
-            message(FATAL_ERROR "Creating cache failed!")
-          endif()
-          
-          execute_process(
-            COMMAND cmake -S . -B cmake-build-debug -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_BUILD_TYPE=Debug
-            RESULT_WORKING_DIRECTORY build
-            RESULT_VARIABLE result
-          )
-          
-          if (NOT result EQUAL 0)
-            message(FATAL_ERROR "Creating cache failed!")
-          endif()
+          if [ "${{ matrix.config.cxx }}" == "g++" ]; then
+              cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
+              cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles"
+          else 
+              cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
+              cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug
+          fi
 
       - name: Build main target
         run: |
@@ -90,8 +59,12 @@ jobs:
         working-directory: ./cmake-build-release/bin
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-              cd Debug
-              ./labwork4.exe --help
+              if [ "${{ matrix.config.cxx }}" == "g++" ]; then
+                  ./labwork4.exe --help
+              else
+                  cd Debug
+                  ./labwork4.exe --help
+              fi
           else 
               ./labwork4 --help
           fi
@@ -101,8 +74,12 @@ jobs:
         working-directory: ./cmake-build-debug/tests
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-              cd Debug
-              ./argparser_tests.exe
+              if [ "${{ matrix.config.cxx }}" == "g++" ]; then
+                  ./argparser_tests.exe
+              else
+                  cd Debug
+                  ./argparser_tests.exe
+              fi
           else
               ./argparser_tests
           fi
