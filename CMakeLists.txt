@@ -21,13 +21,11 @@ else ()
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif ()
 
+add_subdirectory(lib)
+
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    add_subdirectory(lib)
     add_subdirectory(bin)
 
     enable_testing()
     add_subdirectory(tests)
-else()
-    set(ARGPARSER_NOT_MAIN)
-    add_subdirectory(lib)
 endif ()
