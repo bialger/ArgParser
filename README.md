@@ -19,7 +19,7 @@
 FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgParser)
 FetchContent_MakeAvailable(argparser)
 
-target_include_directories(MyTarget PUBLIC "${argparser_SOURCE_DIR}/lib")
+target_link_libraries(MyTarget PUBLIC argparser)
 ```
 
 Можно использовать конкретную ветку разработки, тег версии или коммит:
@@ -48,8 +48,6 @@ FetchContent_MakeAvailable(argparser)
 add_executable(TestArgParser main.cpp)
 
 target_link_libraries(TestArgParser PRIVATE argparser)
-
-target_include_directories(TestArgParser PUBLIC "${argparser_SOURCE_DIR}/lib")
 ```
 
 main.cpp:
