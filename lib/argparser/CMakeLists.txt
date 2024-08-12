@@ -11,3 +11,7 @@ add_subdirectory(basic)
 target_link_libraries(argparser PRIVATE argparser_basic)
 
 target_include_directories(argparser PUBLIC ${PROJECT_SOURCE_DIR})
+
+if (ARGPARSER_NOT_MAIN)
+    target_include_directories(argparser PUBLIC "${argparser_SOURCE_DIR}/lib")
+endif ()
