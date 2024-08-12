@@ -49,7 +49,7 @@ jobs:
       - name: Build main target
         shell: bash
         run: |
-          cmake --build cmake-build-release --target labwork4 || echo "Built with errors"
+          cmake --build cmake-build-release --target ArgParser || echo "Built with errors"
 
       - name: Build tests target
         shell: bash
@@ -62,13 +62,13 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
               if [ "${{ matrix.config.cxx }}" == "g++" ]; then
-                  ./labwork4.exe --help
+                  ./ArgParser.exe --help
               else
                   cd Debug
-                  ./labwork4.exe --help
+                  ./ArgParser.exe --help
               fi
           else 
-              ./labwork4 --help
+              ./ArgParser --help
           fi
 
       - name: Run tests
