@@ -62,6 +62,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
               if [ "${{ matrix.config.cxx }}" == "g++" ]; then
+                  ls -La
                   ./ArgParser.exe --help
               else
                   cd Debug
