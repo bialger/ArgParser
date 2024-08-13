@@ -11,7 +11,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Create CMake cache
-        shell: bash
         run: |
           cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
           cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles"
@@ -19,25 +18,24 @@ jobs:
       - name: Build main target
         shell: bash
         run: |
-          cmake --build cmake-build-release --target ArgParser || echo "Built with errors"
+          cmake --build cmake-build-release --target ArgParser || echo Built with errors
 
       - name: Build tests target
         shell: bash
         run: |
-          cmake --build cmake-build-debug --target argparser_tests || echo "Built with errors"
+          cmake --build cmake-build-debug --target argparser_tests || echo Built with errors
 
       - name: Run program
-        shell: bash
-        working-directory: ./cmake-build-release/bin
+        working-directory: .\cmake-build-release\bin
         run: |
-          echo "Currently unable to run executable on Windows Latest MinGW."
-          #./ArgParser.exe --help
+          echo Currently unable to run executable on Windows Latest MinGW.
+          ::.\ArgParser.exe --help
 
       - name: Run tests
-        shell: bash
-        working-directory: ./cmake-build-debug/tests
+        working-directory: .\cmake-build-debug\tests
         run: |
-          #./argparser_tests.exe
+          echo Currently unable to run tests on Windows Latest MinGW.
+          ::.\argparser_tests.exe
 
   build-matrix:
     name: Tests and application run on ${{ matrix.config.name }}
