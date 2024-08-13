@@ -28,14 +28,13 @@ jobs:
       - name: Run program
         working-directory: .\cmake-build-release\bin
         run: |
-          echo "Currently unable to run executable on Windows Latest MinGW."
           .\ArgParser.exe --help
 
       - name: Run tests
         working-directory: .\cmake-build-debug\tests
         run: |
-          echo Currently unable to run tests on Windows Latest MinGW.
-          :: .\argparser_tests.exe
+          echo "Currently unable to run tests on Windows Latest MinGW."
+          % .\argparser_tests.exe
 
   build-matrix:
     name: Tests and application run on ${{ matrix.config.name }}
