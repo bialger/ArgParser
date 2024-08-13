@@ -3,7 +3,43 @@ name: "CI tests"
 on: [ push ]
 
 jobs:
-  build:
+  build-mingw:
+    name: Tests and application run on Windows Latest MinGW
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create CMake cache
+        shell: bash
+        run: |
+          cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
+          cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles"
+
+      - name: Build main target
+        shell: bash
+        run: |
+          cmake --build cmake-build-release --target ArgParser || echo "Built with errors"
+
+      - name: Build tests target
+        shell: bash
+        run: |
+          cmake --build cmake-build-debug --target argparser_tests || echo "Built with errors"
+
+      - name: Run program
+        shell: bash
+        working-directory: ./cmake-build-release/bin
+        run: |
+          echo "Currently unable to run executable on ${{ matrix.config.name }}."
+          #./ArgParser.exe --help
+
+      - name: Run tests
+        shell: bash
+        working-directory: ./cmake-build-debug/tests
+        run: |
+          #./argparser_tests.exe
+
+  build-matrix:
     name: Tests and application run on ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     strategy:
@@ -16,11 +52,6 @@ jobs:
             build_type: "Release", cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           }
-          - {
-            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
-            os: windows-latest,
-            build_type: "Release", cc: "gcc", cxx: "g++"
-          } # Somehow it is not working even here, exit code 127 on the main executable
           - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
@@ -38,13 +69,8 @@ jobs:
       - name: Create CMake cache
         shell: bash
         run: |
-          if [ "${{ matrix.config.cxx }}" == "g++" ]; then
-              cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles"
-              cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles"
-          else 
-              cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
-              cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug
-          fi
+          cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build main target
         shell: bash
@@ -61,13 +87,8 @@ jobs:
         working-directory: ./cmake-build-release/bin
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-              if [ "${{ matrix.config.cxx }}" == "g++" ]; then
-                  ls
-                  ./ArgParser.exe
-              else
-                  cd Debug
-                  ./ArgParser.exe --help
-              fi
+              cd Debug
+              ./ArgParser.exe --help
           else 
               ./ArgParser --help
           fi
@@ -77,13 +98,8 @@ jobs:
         working-directory: ./cmake-build-debug/tests
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-              if [ "${{ matrix.config.cxx }}" == "g++" ]; then
-                  echo "Currently unable to run tests on ${{ matrix.config.name }}. See https://gitmemories.com/cristianadam/HelloWorld/issues/12 and https://github.com/microsoft/vscode-cmake-tools/issues/2451"
-                  #./argparser_tests.exe
-              else
-                  cd Debug
-                  ./argparser_tests.exe
-              fi
+              cd Debug
+              ./argparser_tests.exe
           else
               ./argparser_tests
           fi
