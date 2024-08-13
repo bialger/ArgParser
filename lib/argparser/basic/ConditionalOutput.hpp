@@ -1,5 +1,5 @@
-#ifndef ERROROUTPUT_HPP_
-#define ERROROUTPUT_HPP_
+#ifndef CONDITIONALOUTPUT_HPP_
+#define CONDITIONALOUTPUT_HPP_
 
 #include <iostream>
 
@@ -18,4 +18,4 @@ struct ConditionalOutput {
   }
 };
 
-#endif //ERROROUTPUT_HPP_
+#endif //CONDITIONALOUTPUT_HPP_
