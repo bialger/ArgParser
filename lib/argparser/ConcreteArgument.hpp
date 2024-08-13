@@ -148,8 +148,6 @@ std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std:
   return used_positions;
 }
 
-//#include "ConcreteArgument.inl"
-
 }
 
 #endif //CONCRETEARGUMENT_HPP_

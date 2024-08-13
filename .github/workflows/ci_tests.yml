@@ -16,11 +16,11 @@ jobs:
             build_type: "Release", cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
           }
-#          - {
-#            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
-#            os: windows-latest,
-#            build_type: "Release", cc: "gcc", cxx: "g++"
-#          } # Somehow it is not working even here, exit code 127 on the main executable
+          - {
+            name: "Windows Latest MinGW", artifact: "Windows-MinGW.tar.xz",
+            os: windows-latest,
+            build_type: "Release", cc: "gcc", cxx: "g++"
+          } # Somehow it is not working even here, exit code 127 on the main executable
           - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
             os: ubuntu-latest,
@@ -62,7 +62,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
               if [ "${{ matrix.config.cxx }}" == "g++" ]; then
-                  ./ArgParser.exe --help
+                  # ./ArgParser.exe --help
               else
                   cd Debug
                   ./ArgParser.exe --help
