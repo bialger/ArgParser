@@ -1,5 +1,3 @@
-#include "ConcreteArgument.hpp"
-
 template<>
 inline size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<std::string>& argv,
                                                                      std::string& value_string,
