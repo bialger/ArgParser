@@ -30,7 +30,7 @@ jobs:
         shell: bash
         working-directory: ./cmake-build-release/bin
         run: |
-          echo "Currently unable to run executable on ${{ matrix.config.name }}."
+          echo "Currently unable to run executable on Windows Latest MinGW."
           #./ArgParser.exe --help
 
       - name: Run tests
