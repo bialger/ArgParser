@@ -3,6 +3,7 @@ add_library(argparser STATIC ArgParser.cpp
         ArgumentBuilder.hpp
         Argument.hpp
         ConcreteArgumentBuilder.hpp
+        ConcreteArgument.cpp
         ConcreteArgument.hpp
 )
 
