@@ -1,9 +1,11 @@
-#ifndef ERROROUTPUT_HPP_
-#define ERROROUTPUT_HPP_
+#ifndef CONDITIONALOUTPUT_HPP_
+#define CONDITIONALOUTPUT_HPP_
 
 #include <iostream>
 
 /**\n Structure for error output in ArgumentParser */
+
+namespace ArgumentParser {
 
 struct ConditionalOutput {
   std::ostream& out_stream = std::cout;
@@ -18,4 +20,6 @@ struct ConditionalOutput {
   }
 };
 
-#endif //ERROROUTPUT_HPP_
+}
+
+#endif //CONDITIONALOUTPUT_HPP_

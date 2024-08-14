@@ -21,8 +21,8 @@ class ConcreteArgument : public Argument {
   [[nodiscard]] size_t GetUsedValues() const override;
   void ClearStored() override;
  protected:
-  inline size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
-                            std::vector<size_t>& used_values, size_t position) override;
+  size_t ObtainValue(const std::vector<std::string>& argv, std::string& value_string,
+                     std::vector<size_t>& used_values, size_t position) override;
 
  private:
   ArgumentInformation info_;
@@ -147,8 +147,6 @@ std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std:
 
   return used_positions;
 }
-
-#include "ConcreteArgument.inl"
 
 }
 

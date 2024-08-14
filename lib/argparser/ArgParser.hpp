@@ -3,8 +3,7 @@
 
 #define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
 template<typename... Args> \
-inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) \
-{ \
+inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) { \
     return lowLevelF(std::forward<Args>(args)...); \
 }
 
@@ -122,7 +121,7 @@ ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char*
   }
 
   (*t_arguments)[long_name] = argument_builders_.size();
-  ConcreteArgumentBuilder<T>* argument_builder = new ConcreteArgumentBuilder<T>(short_name, long_name, description);
+  auto* argument_builder = new ConcreteArgumentBuilder<T>(short_name, long_name, description);
   argument_builders_.push_back(argument_builder);
 
   return *argument_builder;
@@ -132,7 +131,7 @@ template<typename T>
 T ArgParser::GetValue_(const char* long_name, size_t index) {
   std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
   size_t argument_index = t_arguments->at(long_name);
-  ConcreteArgument<T>* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
+  auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
   return argument->GetValue(index);
 }
 

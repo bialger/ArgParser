@@ -72,7 +72,7 @@ bool ArgumentParser::IsValidFilename(std::string& pre_filename) {
   }
 
   /* This Windows-specific check is important because different code pages can
-   * corrupt non-alphanumeric filenames, but UNIX-like systems (like MacOS or
+   * corrupt non-alphanumeric filenames, but UNIX-like systems (like macOS or
    * Linux) handle unicode correctly. */
 
   for (uint64_t position = 0; position < pre_filename.size() - 1; ++position) {
@@ -97,10 +97,11 @@ bool ArgumentParser::IsDirectory(std::string& dirname) {
   return std::filesystem::is_directory(path);
 }
 
-/* The code provides dummy function definitions for Windows console-related
+/* The code provides fake function definitions for Windows console-related
  * functions when the code is being compiled in a non-Windows environment.
  * This ensures that the code can compile and run without errors in such
- * environments. The dummy functions have minimal functionality and simply
+ * environments.
+ * The fake functions have minimal functionality and simply
  * return their input parameters. */
 
 #if not(defined _WIN32 || defined _WIN64 || defined __CYGWIN__)
