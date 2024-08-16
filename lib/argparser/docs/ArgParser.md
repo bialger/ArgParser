@@ -16,7 +16,8 @@
 
 Зависит от [BasicFunctions.hpp](../basic/BasicFunctions.hpp),
 [ConcreteArgument.hpp](../ConcreteArgument.hpp),
-[ConcreteArgumentBuilder.hpp](../ConcreteArgumentBuilder.hpp).
+[ConcreteArgumentBuilder.hpp](../ConcreteArgumentBuilder.hpp),
+[ArgParserConcepts.hpp](../ArgParserConcepts.hpp).
 
 ## Связанные документы
 
@@ -31,10 +32,14 @@
 
 ### ArgParser
 
-Принимает имя программы, явный. Ожидается, вызов пользователем именно его.
+Принимает имя программы и типы добавленных пользователем аргументов.
+Типы добавленных аргументов должны быть представлены в виде `ArgumentTypes<Args ...>`, где Args... - типы аргументов.
+Аргументы должны удовлетворять концепту `ProperArgumentType`.
+Ожидается вызов пользователем именно его.
 
 ```cpp
-explicit ArgParser(const char* name = "");
+template<ProperArgumentType ... Args>
+ArgParser(const char* name = "", ArgumentTypes<Args ...> types = {});
 ```
 
 Удален конструктор копирования (как и оператор присваивания)
@@ -110,7 +115,7 @@ OPTIONS:
 парсинга, выбрасывается исключение `std::runtime_error`.
 
 ```cpp
-template<typename T>
+template<ProperArgumentType T>
 T GetValue(const char* long_name, size_t index = 0);
 ```
 
@@ -123,14 +128,14 @@ T GetValue(const char* long_name, size_t index = 0);
 string* описание ключа (по умолчанию - пустая строка).
 
 ```cpp
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& AddArgument(char short_name, const char* long_name, const char* description = "");
 ```
 
 Эта перегрузка не принимает никакого значения короткого ключа.
 
 ```cpp
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
 ```
 

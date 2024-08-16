@@ -5,6 +5,9 @@
 Она была написана как лабораторная работа в курсе "Основы программирования на C++" в программе ITMO SE.
 С заданием можно ознакомиться [здесь](./TASK.md).
 
+В библиотеке определен парсинг стандартных примитивов, таких как `int`, `float`, `char*` и т.д.
+Есть возможность добавлять логику парсинга для иных типов документов (см. [пример](./bin/main.cpp)).
+
 Документация библиотеки находится [во вложенной папке](./lib/argparser/docs/README.md).
 
 ## Использование в проекте
@@ -32,7 +35,7 @@ FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgPars
 FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgParser GIT_TAG v1.1.0)
 ```
 
-### Пример:
+## Пример использования и добавления аргумента
 
 CMakeLists.txt:
 ```cmake
@@ -56,9 +59,49 @@ main.cpp:
 #include <iostream>
 #include <argparser/ArgParser.hpp>
 
+enum class Action {
+  kNone = 0,
+  kSum = 1,
+  kMul = 2,
+};
+
+std::ostream& operator<<(std::ostream& os, Action action) {
+  switch (action) {
+    case Action::kSum:
+      os << "sum";
+      break;
+    case Action::kMul:
+      os << "mul";
+      break;
+    case Action::kNone:
+      os << "none";
+      break;
+  }
+
+  return os;
+}
+
+ArgumentParser::NonMemberParsingResult<Action> ParseAction(const std::string& action) {
+  ArgumentParser::NonMemberParsingResult<Action> result{};
+
+  if (action == "sum") {
+    result.value = Action::kSum;
+  } else if (action == "mul") {
+    result.value = Action::kMul;
+  } else {
+    result.success = false;
+    result.value = Action::kNone;
+  }
+
+  return result;
+}
+
+AddArgumentType(Action, ParseAction);
+
 int main(int argc, char *argv[]) {
-  ArgumentParser::ArgParser parser("TestArgParser");
+  ArgumentParser::ArgParser parser("TestArgParser", PassArgumentTypes(Action));
   parser.AddHelp('h', "help", "This program is an ArgParser FetchContent example.");
+  parser.AddArgument<Action>('a', "action", "action type");
   parser.AddFlag('t', "test", "test argument");
   bool result = parser.Parse(argc, argv, {std::cerr, true});
 
@@ -70,6 +113,12 @@ int main(int argc, char *argv[]) {
   if (parser.Help()) {
     std::cout << parser.HelpDescription() << std::endl;
     return 0;
+  }
+  
+  if (parser.GetValue<Action>() == Action::kSum) {
+    std::cout << "Summarize" << std::endl;
+  } else if (parser.GetValue<Action>() == Action::kMul) {
+    std::cout << "Multiply" << std::endl;
   }
 
   std::cout << std::boolalpha << parser.GetFlag("test") << std::endl;
