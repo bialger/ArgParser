@@ -100,6 +100,7 @@ AddArgumentType(Action, ParseAction);
 
 int main(int argc, char *argv[]) {
   ArgumentParser::ArgParser parser("TestArgParser", PassArgumentTypes(Action));
+  parser.SetAliasForType<Action>("Action");
   parser.AddHelp('h', "help", "This program is an ArgParser FetchContent example.");
   parser.AddArgument<Action>('a', "action", "action type");
   parser.AddFlag('t', "test", "test argument");

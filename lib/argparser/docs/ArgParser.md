@@ -34,7 +34,11 @@
 
 Принимает имя программы и типы добавленных пользователем аргументов.
 Типы добавленных аргументов должны быть представлены в виде `ArgumentTypes<Args ...>`, где Args... - типы аргументов.
-Аргументы должны удовлетворять концепту `ProperArgumentType`.
+Аргументы должны удовлетворять концепту `ProperArgumentType`, то есть:
+* Иметь конструктор без параметров и конструктор копирования
+* Иметь оператор присваивания с копированием
+* Должен быть определен оператор `std::ostream& operator<<(std::ostream& os, const T& t)`
+
 Ожидается вызов пользователем именно его.
 
 ```cpp
@@ -157,6 +161,16 @@ ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, c
 
 ```cpp
 ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
+```
+
+### SetAliasForType<T\>
+
+Функция, переопределяющая псевдоним для типа `T`. 
+Разрешены только латинские буквы и цифры.
+
+```cpp
+template<ProperArgumentType T>
+void SetAliasForType(const std::string& alias);
 ```
 
 ### GetFlag, GetShortValue, ... GetStringValue, GetCompositeValue
