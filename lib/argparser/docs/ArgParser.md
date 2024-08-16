@@ -83,7 +83,7 @@ bool Parse(int argc, char** argv, ConditionalOutput error_output = {std::cout, f
 негативного значения после парсинга.
 
 ```cpp
-bool Help();
+[[nodiscard]] bool Help() const;
 ```
 
 ### HelpDescription
@@ -91,7 +91,7 @@ bool Help();
 Функция, возвращающая `std::string`, содержащую помощь для пользователя.
 
 ```cpp
-std::string HelpDescription();
+[[nodiscard]] std::string HelpDescription() const;
 ```
 
 Пример вывода возвращаемого значения:
@@ -120,7 +120,7 @@ OPTIONS:
 
 ```cpp
 template<ProperArgumentType T>
-T GetValue(const char* long_name, size_t index = 0);
+[[nodiscard]] T GetValue(const char* long_name, size_t index = 0) const;
 ```
 
 ### AddArgument<T\>
