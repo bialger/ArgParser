@@ -52,6 +52,9 @@ class ArgParser {
   template<ProperArgumentType T>
   T GetValue(const char* long_name, size_t index = 0);
 
+  template<ProperArgumentType T>
+  void SetAliasForType(const std::string& alias);
+
   ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
   ALIAS_TEMPLATE_FUNCTION(AddIntArgument, AddArgument<int32_t>);
   ALIAS_TEMPLATE_FUNCTION(AddLongLongArgument, AddArgument<int64_t>);
@@ -172,6 +175,27 @@ T ArgParser::GetValue_(const char* long_name, size_t index) {
   size_t argument_index = t_arguments->at(long_name);
   auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
   return argument->GetValue(index);
+}
+
+template<ProperArgumentType T>
+void ArgumentParser::ArgParser::SetAliasForType(const std::string& alias) {
+  auto it = std::find(allowed_typenames_.begin(), allowed_typenames_.end(), typeid(T).name());
+  if (it == allowed_typenames_.end()) {
+    return;
+  }
+
+  auto output_it = allowed_typenames_for_help_.begin() + (it - allowed_typenames_.begin());
+  auto alias_end_it = alias.begin();
+
+  while (alias_end_it != alias.end()) {
+    if (!std::isalnum(*alias_end_it)) {
+      break;
+    }
+
+    ++alias_end_it;
+  }
+
+  *output_it = std::string(alias.begin(), alias_end_it);
 }
 
 static_assert(ProperArgumentType<int8_t>);
