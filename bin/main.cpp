@@ -26,28 +26,16 @@ std::ostream& operator<<(std::ostream& os, Action action) {
   return os;
 }
 
-Action ParseOneAction(const std::string& action) {
-  if (action == "sum") {
-    return Action::kSum;
-  } else if (action == "mul") {
-    return Action::kMul;
-  } else {
-    return Action::kNone;
-  }
-}
-
-ArgumentParser::NonMemberParsingResult<Action> ParseAction(const std::vector<std::string>& argv,
-                   std::string& value_string,
-                   std::vector<size_t>& used_values,
-                   size_t position) {
-  Action pre_value = ParseOneAction(value_string);
+ArgumentParser::NonMemberParsingResult<Action> ParseAction(const std::string& action) {
   ArgumentParser::NonMemberParsingResult<Action> result{};
-  result.position = position;
 
-  if (pre_value == Action::kNone) {
-    result.success = false;
+  if (action == "sum") {
+    result.value = Action::kSum;
+  } else if (action == "mul") {
+    result.value = Action::kMul;
   } else {
-    result.result = pre_value;
+    result.success = false;
+    result.value = Action::kNone;
   }
 
   return result;

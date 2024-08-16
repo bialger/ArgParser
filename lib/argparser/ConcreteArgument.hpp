@@ -10,9 +10,8 @@ namespace ArgumentParser {
 
 template<ProperArgumentType T>
 struct NonMemberParsingResult {
-  size_t position = 0;
   bool success = true;
-  T result = T();
+  T value = T();
 };
 
 template<ProperArgumentType T>
@@ -160,21 +159,24 @@ std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std:
 
 #define PassArgumentTypes(...) ArgumentParser::ArgumentTypes<__VA_ARGS__>{}
 
+/**\n This macro adds a definition of the parsing method for ConcreteArgument<Type>. \n
+ * Note that this macro creates such definition for types with simple logics. */
+
 #define AddArgumentType(Type, ParsingFunction) \
 template<> \
 size_t ArgumentParser::ConcreteArgument<Type>::ObtainValue(const std::vector<std::string>& argv, \
 std::string& value_string, \
 std::vector<size_t>& used_values, \
 size_t position) { \
-  NonMemberParsingResult<Type> result = ParsingFunction(argv, value_string, used_values, position); \
+  NonMemberParsingResult<Type> result = ParsingFunction(value_string); \
   \
   if (result.success) {\
-    value_ = result.result; \
+    value_ = result.value; \
   } else { \
     value_status_ = ArgumentParsingStatus::kInvalidArgument;\
   }\
   \
-  return result.position; \
+  return position; \
 }
 
 #endif //CONCRETEARGUMENT_HPP_
