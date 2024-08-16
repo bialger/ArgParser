@@ -5,6 +5,7 @@ add_library(argparser STATIC ArgParser.cpp
         ConcreteArgumentBuilder.hpp
         ConcreteArgument.cpp
         ConcreteArgument.hpp
+        ArgParserConcepts.hpp
 )
 
 add_subdirectory(basic)

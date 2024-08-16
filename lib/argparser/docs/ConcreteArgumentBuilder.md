@@ -4,7 +4,7 @@
 класса должна возвращать функция добавления аргумента из `ArgParser`, к нему должен 
 обращаться пользователь, добавляя информацию об аргументе. Реализует функции добавления 
 любой информации про аргумент и функцию построения. Наследует абстрактному классу 
-`ArgumentBuilder`. Параметр шаблона - имя типа `T`. Находится в пространстве имён 
+`ArgumentBuilder`. Параметр шаблона - имя типа `T`, удовлетворяющего `ProperArgumentType`. Находится в пространстве имён 
 `ArgumentParser`.
 
 ## Объявление и определение
@@ -14,8 +14,9 @@
 
 ## Зависимости
 
-Зависит от [ConcreteArgument.hpp](../ConcreteArgument.hpp) и
-[ArgumentBuilder.hpp](../ArgumentBuilder.hpp).
+Зависит от [ConcreteArgument.hpp](../ConcreteArgument.hpp),
+[ArgumentBuilder.hpp](../ArgumentBuilder.hpp),
+[ArgParserConcepts.hpp](../ArgParserConcepts.hpp).
 
 ## Связанные документы
 
