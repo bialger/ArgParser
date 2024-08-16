@@ -12,10 +12,14 @@ struct ConditionalOutput {
   bool print_messages = false;
 
   template<typename T>
+  requires requires(T t, std::ostream& os) {
+    { os << t } -> std::same_as<std::ostream&>;
+  }
   ConditionalOutput& operator<<(const T& t) {
     if (print_messages) {
       out_stream << t;
     }
+
     return *this;
   }
 };
