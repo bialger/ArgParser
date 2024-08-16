@@ -4,17 +4,18 @@
 #include <limits>
 
 #include "Argument.hpp"
+#include "ArgParserConcepts.hpp"
 
 namespace ArgumentParser {
 
-template<typename T>
+template<ProperArgumentType T>
 struct NonMemberParsingResult {
   size_t position = 0;
   bool success = true;
   T result = T();
 };
 
-template<typename T>
+template<ProperArgumentType T>
 class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
@@ -41,7 +42,7 @@ class ConcreteArgument : public Argument {
   std::vector<T>* stored_values_;
 };
 
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgument<T>::ConcreteArgument(const ArgumentInformation& info,
                                       T default_value,
                                       T* stored_value,
@@ -55,7 +56,7 @@ ConcreteArgument<T>::ConcreteArgument(const ArgumentInformation& info,
   stored_values_ = stored_values;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 T ConcreteArgument<T>::GetValue(size_t index) const {
   if (!info_.has_store_values) {
     return value_;
@@ -64,27 +65,27 @@ T ConcreteArgument<T>::GetValue(size_t index) const {
   return stored_values_->at(index);
 }
 
-template<typename T>
+template<ProperArgumentType T>
 ArgumentParsingStatus ConcreteArgument<T>::GetValueStatus() const {
   return value_status_;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 const std::string& ConcreteArgument<T>::GetType() const {
   return info_.type;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 const ArgumentInformation& ConcreteArgument<T>::GetInfo() const {
   return info_;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 size_t ConcreteArgument<T>::GetUsedValues() const {
   return value_counter_;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 bool ConcreteArgument<T>::CheckLimit() {
   if (value_counter_ < info_.minimum_values) {
     value_status_ = ArgumentParsingStatus::kInsufficientArguments;
@@ -98,7 +99,7 @@ bool ConcreteArgument<T>::CheckLimit() {
   return true;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 void ConcreteArgument<T>::ClearStored() {
   stored_values_->clear();
   value_counter_ = 0;
@@ -108,7 +109,7 @@ void ConcreteArgument<T>::ClearStored() {
   }
 }
 
-template<typename T>
+template<ProperArgumentType T>
 std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std::string>& argv,
                                                           size_t position) {
   std::vector<size_t> used_positions;

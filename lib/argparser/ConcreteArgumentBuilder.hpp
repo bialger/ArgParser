@@ -5,10 +5,11 @@
 
 #include "ArgumentBuilder.hpp"
 #include "ConcreteArgument.hpp"
+#include "ArgParserConcepts.hpp"
 
 namespace ArgumentParser {
 
-template<typename T>
+template<ProperArgumentType T>
 class ConcreteArgumentBuilder : public ArgumentBuilder {
  public:
   ConcreteArgumentBuilder() = delete;

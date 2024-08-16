@@ -13,11 +13,12 @@ inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(
 
 #include "ConcreteArgumentBuilder.hpp"
 #include "ConcreteArgument.hpp"
+#include "ArgParserConcepts.hpp"
 #include "lib/argparser/basic/BasicFunctions.hpp"
 
 namespace ArgumentParser {
 
-template<typename ... Args>
+template<ProperArgumentType ... Args>
 struct ArgumentTypes {
   static std::vector<std::string> GetTypenames() {
     return {typeid(Args).name() ...};
@@ -26,7 +27,7 @@ struct ArgumentTypes {
 
 class ArgParser {
  public:
-  template<typename ... Args>
+  template<ProperArgumentType ... Args>
   ArgParser(const char* name = "", ArgumentTypes<Args ...> types = {});
 
   ArgParser(const ArgParser& other) = delete;
@@ -42,13 +43,13 @@ class ArgParser {
   ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, const char* description = "");
   ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
 
-  template<typename T>
+  template<ProperArgumentType T>
   ConcreteArgumentBuilder<T>& AddArgument(char short_name, const char* long_name, const char* description = "");
 
-  template<typename T>
+  template<ProperArgumentType T>
   ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
 
-  template<typename T>
+  template<ProperArgumentType T>
   T GetValue(const char* long_name, size_t index = 0);
 
   ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
@@ -99,14 +100,14 @@ class ArgParser {
 
   void RefreshArguments();
 
-  template<typename T>
+  template<ProperArgumentType T>
   ConcreteArgumentBuilder<T>& AddArgument_(char short_name, const char* long_name, const char* description);
 
-  template<typename T>
+  template<ProperArgumentType T>
   T GetValue_(const char* long_name, size_t index);
 };
 
-template<typename... Args>
+template<ProperArgumentType... Args>
 ArgumentParser::ArgParser::ArgParser(const char* name, ArgumentTypes<Args ...> types) {
   name_ = name;
   allowed_typenames_ =
@@ -135,22 +136,22 @@ ArgumentParser::ArgParser::ArgParser(const char* name, ArgumentTypes<Args ...> t
   help_index_ = std::string::npos;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& ArgParser::AddArgument(char short_name, const char* long_name, const char* description) {
   return AddArgument_<T>(short_name, long_name, description);
 }
 
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& ArgParser::AddArgument(const char* long_name, const char* description) {
   return AddArgument_<T>(kBadChar, long_name, description);
 }
 
-template<typename T>
+template<ProperArgumentType T>
 T ArgParser::GetValue(const char* long_name, size_t index) {
   return GetValue_<T>(long_name, index);
 }
 
-template<typename T>
+template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char* long_name, const char* description) {
   std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
 
@@ -165,13 +166,29 @@ ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char*
   return *argument_builder;
 }
 
-template<typename T>
+template<ProperArgumentType T>
 T ArgParser::GetValue_(const char* long_name, size_t index) {
   std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
   size_t argument_index = t_arguments->at(long_name);
   auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
   return argument->GetValue(index);
 }
+
+static_assert(ProperArgumentType<int8_t>);
+static_assert(ProperArgumentType<int16_t>);
+static_assert(ProperArgumentType<int32_t>);
+static_assert(ProperArgumentType<int64_t>);
+static_assert(ProperArgumentType<uint8_t>);
+static_assert(ProperArgumentType<uint16_t>);
+static_assert(ProperArgumentType<uint32_t>);
+static_assert(ProperArgumentType<uint64_t>);
+static_assert(ProperArgumentType<float>);
+static_assert(ProperArgumentType<double>);
+static_assert(ProperArgumentType<long double>);
+static_assert(ProperArgumentType<bool>);
+static_assert(ProperArgumentType<char>);
+static_assert(ProperArgumentType<std::string>);
+static_assert(ProperArgumentType<CompositeString>);
 
 } // namespace ArgumentParser
 
