@@ -34,7 +34,11 @@
 
 Принимает имя программы и типы добавленных пользователем аргументов.
 Типы добавленных аргументов должны быть представлены в виде `ArgumentTypes<Args ...>`, где Args... - типы аргументов.
-Аргументы должны удовлетворять концепту `ProperArgumentType`.
+Аргументы должны удовлетворять концепту `ProperArgumentType`, то есть:
+* Иметь конструктор без параметров и конструктор копирования
+* Иметь оператор присваивания с копированием
+* Должен быть определен оператор `std::ostream& operator<<(std::ostream& os, const T& t)`
+
 Ожидается вызов пользователем именно его.
 
 ```cpp
@@ -79,7 +83,7 @@ bool Parse(int argc, char** argv, ConditionalOutput error_output = {std::cout, f
 негативного значения после парсинга.
 
 ```cpp
-bool Help();
+[[nodiscard]] bool Help() const;
 ```
 
 ### HelpDescription
@@ -87,7 +91,7 @@ bool Help();
 Функция, возвращающая `std::string`, содержащую помощь для пользователя.
 
 ```cpp
-std::string HelpDescription();
+[[nodiscard]] std::string HelpDescription() const;
 ```
 
 Пример вывода возвращаемого значения:
@@ -116,7 +120,7 @@ OPTIONS:
 
 ```cpp
 template<ProperArgumentType T>
-T GetValue(const char* long_name, size_t index = 0);
+[[nodiscard]] T GetValue(const char* long_name, size_t index = 0) const;
 ```
 
 ### AddArgument<T\>
@@ -157,6 +161,16 @@ ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, c
 
 ```cpp
 ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
+```
+
+### SetAliasForType<T\>
+
+Функция, переопределяющая псевдоним для типа `T`. 
+Разрешены только латинские буквы и цифры.
+
+```cpp
+template<ProperArgumentType T>
+void SetAliasForType(const std::string& alias);
 ```
 
 ### GetFlag, GetShortValue, ... GetStringValue, GetCompositeValue

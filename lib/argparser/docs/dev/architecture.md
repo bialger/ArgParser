@@ -57,6 +57,7 @@ classDiagram
         +AddArgument~T~(char short_name, const char[] long_name, const char[] description="") ConcreteArgumentBuilder~T~ &
         +AddArgument~T~(const char[] long_name, const char[] description="") ConcreteArgumentBuilder~T~ &
         +GetValue~T~(const char[] long_name, size_t index=0) T
+        +SeSetAliasForType~T~(string alias) void
         -Parse_(vector~string~ args, ConditionalOutput error_output) bool
         -GetLongKeys(string current_argument) vector~string~
         -ParsePositionalArguments(vector~string~ argv, const vector~size_t~ & used_positions) void

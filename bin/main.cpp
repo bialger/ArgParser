@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
   Action action{};
 
   ArgumentParser::ArgParser parser("Program", PassArgumentTypes(Action));
+  parser.SetAliasForType<Action>("Action");
   parser.AddIntArgument("N").MultiValue(1).Positional().StoreValues(values);
   parser.AddArgument<Action>('a', "action", "Action type").StoreValue(action);
   parser.AddHelp('h', "help", "Program accumulate arguments");
