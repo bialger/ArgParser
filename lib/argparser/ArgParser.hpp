@@ -28,7 +28,7 @@ struct ArgumentTypes {
 class ArgParser {
  public:
   template<ProperArgumentType ... Args>
-  ArgParser(const char* name = "", ArgumentTypes<Args ...> types = {});
+  explicit ArgParser(const char* name = "", ArgumentTypes<Args ...> types = {});
 
   ArgParser(const ArgParser& other) = delete;
   ArgParser& operator=(const ArgParser& other) = delete;
@@ -37,8 +37,8 @@ class ArgParser {
   bool Parse(const std::vector<std::string>& args, ConditionalOutput error_output = {});
   bool Parse(int argc, char** argv, ConditionalOutput error_output = {});
 
-  bool Help();
-  std::string HelpDescription();
+  [[nodiscard]] bool Help() const;
+  [[nodiscard]] std::string HelpDescription() const;
 
   ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, const char* description = "");
   ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
@@ -50,7 +50,7 @@ class ArgParser {
   ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
 
   template<ProperArgumentType T>
-  T GetValue(const char* long_name, size_t index = 0);
+  T GetValue(const char* long_name, size_t index = 0) const;
 
   template<ProperArgumentType T>
   void SetAliasForType(const std::string& alias);
@@ -95,11 +95,11 @@ class ArgParser {
 
   bool Parse_(const std::vector<std::string>& args, ConditionalOutput error_output);
 
-  std::vector<std::string> GetLongKeys(const std::string& current_argument);
+  [[nodiscard]] std::vector<std::string> GetLongKeys(const std::string& current_argument) const;
 
   void ParsePositionalArguments(const std::vector<std::string>& argv, const std::vector<size_t>& used_positions);
 
-  bool HandleErrors(ConditionalOutput error_output);
+  bool HandleErrors(ConditionalOutput error_output) const;
 
   void RefreshArguments();
 
@@ -107,7 +107,7 @@ class ArgParser {
   ConcreteArgumentBuilder<T>& AddArgument_(char short_name, const char* long_name, const char* description);
 
   template<ProperArgumentType T>
-  T GetValue_(const char* long_name, size_t index);
+  T GetValue_(const char* long_name, size_t index) const;
 };
 
 template<ProperArgumentType... Args>
@@ -150,19 +150,19 @@ ConcreteArgumentBuilder<T>& ArgParser::AddArgument(const char* long_name, const 
 }
 
 template<ProperArgumentType T>
-T ArgParser::GetValue(const char* long_name, size_t index) {
+T ArgParser::GetValue(const char* long_name, size_t index) const {
   return GetValue_<T>(long_name, index);
 }
 
 template<ProperArgumentType T>
 ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char* long_name, const char* description) {
-  std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
+  std::map<std::string, size_t>& t_arguments = arguments_by_type_.at(typeid(T).name());
 
   if (short_name != kBadChar) {
     short_to_long_names_[short_name] = long_name;
   }
 
-  (*t_arguments)[long_name] = argument_builders_.size();
+  t_arguments[long_name] = argument_builders_.size();
   auto* argument_builder = new ConcreteArgumentBuilder<T>(short_name, long_name, description);
   argument_builders_.push_back(argument_builder);
 
@@ -170,9 +170,9 @@ ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const char*
 }
 
 template<ProperArgumentType T>
-T ArgParser::GetValue_(const char* long_name, size_t index) {
-  std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(typeid(T).name());
-  size_t argument_index = t_arguments->at(long_name);
+T ArgParser::GetValue_(const char* long_name, size_t index) const {
+  const std::map<std::string, size_t>& t_arguments = arguments_by_type_.at(typeid(T).name());
+  size_t argument_index = t_arguments.at(long_name);
   auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
   return argument->GetValue(index);
 }

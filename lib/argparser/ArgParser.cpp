@@ -22,7 +22,7 @@ bool ArgumentParser::ArgParser::Parse(int argc, char** argv, ConditionalOutput e
   return Parse_(args, error_output);
 }
 
-bool ArgumentParser::ArgParser::Help() {
+bool ArgumentParser::ArgParser::Help() const {
   if (help_index_ == std::string::npos) {
     return false;
   }
@@ -30,7 +30,7 @@ bool ArgumentParser::ArgParser::Help() {
   return GetValue<bool>(arguments_[help_index_]->GetInfo().long_key);
 }
 
-std::string ArgumentParser::ArgParser::HelpDescription() {
+std::string ArgumentParser::ArgParser::HelpDescription() const {
   if (help_index_ == std::string::npos) {
     return {};
   }
@@ -44,7 +44,7 @@ std::string ArgumentParser::ArgParser::HelpDescription() {
     std::string type_name = allowed_typenames_[i];
     std::string output_type_name = allowed_typenames_for_help_[i];
 
-    for (const auto& iterator : arguments_by_type_[type_name]) {
+    for (const auto& iterator : arguments_by_type_.at(type_name)) {
       if (iterator.second == help_index_) {
         continue;
       }
@@ -185,7 +185,7 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
   return HandleErrors(error_output);
 }
 
-std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) {
+std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) const {
   std::vector<std::string> long_keys = {current_argument.substr(2)};
 
   if (long_keys[0].find('=') != std::string::npos) {
@@ -248,7 +248,7 @@ void ArgumentParser::ArgParser::RefreshArguments() {
   }
 }
 
-bool ArgumentParser::ArgParser::HandleErrors(ConditionalOutput error_output) {
+bool ArgumentParser::ArgParser::HandleErrors(ConditionalOutput error_output) const {
   std::string error_string;
   bool is_correct = true;
 
