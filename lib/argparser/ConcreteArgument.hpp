@@ -8,6 +8,13 @@
 namespace ArgumentParser {
 
 template<typename T>
+struct NonMemberParsingResult {
+  size_t position = 0;
+  bool success = true;
+  T result = T();
+};
+
+template<typename T>
 class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
@@ -148,6 +155,25 @@ std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std:
   return used_positions;
 }
 
+}
+
+#define PassArgumentTypes(...) ArgumentParser::ArgumentTypes<__VA_ARGS__>{}
+
+#define AddArgumentType(Type, ParsingFunction) \
+template<> \
+size_t ArgumentParser::ConcreteArgument<Type>::ObtainValue(const std::vector<std::string>& argv, \
+std::string& value_string, \
+std::vector<size_t>& used_values, \
+size_t position) { \
+  NonMemberParsingResult<Type> result = ParsingFunction(argv, value_string, used_values, position); \
+  \
+  if (result.success) {\
+    value_ = result.result; \
+  } else { \
+    value_status_ = ArgumentParsingStatus::kInvalidArgument;\
+  }\
+  \
+  return result.position; \
 }
 
 #endif //CONCRETEARGUMENT_HPP_
