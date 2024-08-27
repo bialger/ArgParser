@@ -2,6 +2,7 @@
 #define ARGUMENT_H_
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <functional>
 
@@ -33,9 +34,9 @@ enum class ArgumentParsingStatus {
 
 struct ArgumentInformation {
   char short_key = kBadChar;
-  const char* long_key = "";
-  const char* description = "";
-  std::string type;
+  std::string_view long_key;
+  std::string description;
+  std::string_view type;
   size_t minimum_values = 0;
   bool is_multi_value = false;
   bool is_positional = false;
@@ -52,7 +53,7 @@ class Argument {
   virtual std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) = 0;
   virtual bool CheckLimit() = 0;
   [[nodiscard]] virtual ArgumentParsingStatus GetValueStatus() const = 0;
-  [[nodiscard]] virtual const std::string& GetType() const = 0;
+  [[nodiscard]] virtual const std::string_view& GetType() const = 0;
   [[nodiscard]] virtual const ArgumentInformation& GetInfo() const = 0;
   [[nodiscard]] virtual size_t GetUsedValues() const = 0;
   virtual void ClearStored() = 0;
