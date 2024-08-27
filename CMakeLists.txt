@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
         ArgParser
-        VERSION 1.2.5
+        VERSION 1.3.0
         DESCRIPTION "C++ CLI argument parser library"
         LANGUAGES CXX
 )
