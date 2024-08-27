@@ -31,9 +31,10 @@
 
 ### ConcreteArgumentBuilder
 
-Принимает короткий ключ в виде `char`, длинный ключ в виде *constant C-style string*, 
-описание аргумента в виде *constant C-style string*. Не предназначен для прямого вызова
-пользователем, поскольку имеет смысл только во внутренней логике класса `ArgParser`.
+Принимает короткий ключ в виде `char`, длинный ключ в виде `std::string_view`, 
+описание аргумента в виде `std::string`. 
+Не предназначен для прямого вызова пользователем, поскольку имеет смысл только во 
+внутренней логике класса `ArgParser`.
 ```cpp
 ConcreteArgumentBuilder(char short_name, const char* long_name, const char* description);
 ```

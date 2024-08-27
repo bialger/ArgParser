@@ -20,7 +20,7 @@ flowchart TB
 ## Архитектура подсистем
 
 * Исходя из вышеуказанного предполагаемого использования продукта, весь продукт 
-  представляет собой одну подсистему - библиотеку argparer, которая должна обрабатывать
+  представляет собой одну подсистему - библиотеку argparser, которая должна обрабатывать
   данные аргументы командной строки.
 
 ### Архитектура подсистемы "ArgParser"
@@ -40,38 +40,38 @@ classDiagram
     direction TB
     note for ArgParser "Has pseudonym functions for AddArgument and GetValue for each argument type"
     class ArgParser {
-        -const char[] name_;
+        -string name_;
         -vector~ArgumentBuilder*~ argument_builders_;
         -vector~Argument*~ arguments_;
-        -vector~string~ allowed_typenames_;
+        -vector~string_view~ allowed_typenames_;
         -vector~string~ allowed_typenames_for_help_;
-        -map~string, map~ string, size_t~~ arguments_by_type_;
-        -map~char, string~ short_to_long_names_;
+        -map~string_view, map~ string_view, size_t~~ arguments_by_type_;
+        -map~char, string_view~ short_to_long_names_;
         -size_t help_index_;
         +Parse(vector~string~ args, ConditionalOutput error_output=()) bool
         +Parse(int argc, char[][] argv, ConditionalOutput error_output=()) bool
         +Help() bool
         +HelpDescription() string
-        +AddHelp(char short_name, const char[] long_name, const char[] description="") ConcreteArgumentBuilder~bool~ &
-        +AddHelp(const char[] long_name, const char[] description="") ConcreteArgumentBuilder~bool~ &
-        +AddArgument~T~(char short_name, const char[] long_name, const char[] description="") ConcreteArgumentBuilder~T~ &
-        +AddArgument~T~(const char[] long_name, const char[] description="") ConcreteArgumentBuilder~T~ &
-        +GetValue~T~(const char[] long_name, size_t index=0) T
+        +AddHelp(char short_name, string_view long_name, string description="") ConcreteArgumentBuilder~bool~ &
+        +AddHelp(string_view long_name, string description="") ConcreteArgumentBuilder~bool~ &
+        +AddArgument~T~(char short_name, string_view long_name, string description="") ConcreteArgumentBuilder~T~ &
+        +AddArgument~T~(string_view long_name, string description="") ConcreteArgumentBuilder~T~ &
+        +GetValue~T~(string_view long_name, size_t index=0) T
         +SeSetAliasForType~T~(string alias) void
         -Parse_(vector~string~ args, ConditionalOutput error_output) bool
         -GetLongKeys(string current_argument) vector~string~
         -ParsePositionalArguments(vector~string~ argv, const vector~size_t~ & used_positions) void
         -HandleErrors(ConditionalOutput error_output) bool
         -RefreshArguments() void
-        -AddArgument_~T~(char short_name, const char[] long_name, const char[] description) ConcreteArgumentBuilder~T~ &
-        -GetValue_~T~(const char* long_name, size_t index) T
+        -AddArgument_~T~(char short_name, string_view long_name, string description) ConcreteArgumentBuilder~T~ &
+        -GetValue_~T~(string_view long_name, size_t index) T
     }
     class Argument {
         <<interface>>
         +ValidateArgument(vector~string~ argv, size_t position)* vector~size_t~
         +CheckLimit()* bool
         +GetValueStatus()* ArgumentParsingStatus
-        +GetType()* string
+        +GetType()* string_view
         +GetInfo()* ArgumentInformation
         +GetUsedValues()* size_t
         +ClearStored()* void
@@ -95,7 +95,7 @@ classDiagram
         +ValidateArgument(vector~string~ argv, size_t position) vector~size_t~
         +CheckLimit() bool
         +GetValueStatus() ArgumentParsingStatus
-        +GetType() string
+        +GetType() string_view
         +GetInfo() ArgumentInformation
         +GetUsedValues() size_t
         +ClearStored() void
@@ -120,9 +120,9 @@ classDiagram
     }
     class ArgumentInformation {
         +char short_key = kBadChar
-        +const char[] long_key = ""
-        +const char[] description = ""
-        +string type
+        +string_view long_key = ""
+        +string description = ""
+        +string_view type
         +size_t minimum_values = 0
         +bool is_multi_value = false
         +bool is_positional = false

@@ -27,7 +27,9 @@ bool ArgumentParser::ArgParser::Help() const {
     return false;
   }
 
-  return GetValue<bool>(arguments_[help_index_]->GetInfo().long_key);
+  auto* help_argument = dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_]);
+
+  return help_argument->GetValue(0);
 }
 
 std::string ArgumentParser::ArgParser::HelpDescription() const {
@@ -35,13 +37,14 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
     return {};
   }
 
-  std::string help = name_;
+  std::string help;
+  help += name_;
   help += "\n";
   help += argument_builders_[help_index_]->GetInfo().description;
   help += "\n\nOPTIONS:\n";
 
   for (size_t i = 0; i < allowed_typenames_.size(); ++i) {
-    std::string type_name = allowed_typenames_[i];
+    std::string_view type_name = allowed_typenames_[i];
     std::string output_type_name = allowed_typenames_for_help_[i];
 
     for (const auto& iterator : arguments_by_type_.at(type_name)) {
@@ -52,7 +55,8 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
       ArgumentBuilder* argument = argument_builders_[iterator.second];
       ArgumentInformation current_info = argument->GetInfo();
       help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
-      help += std::string("--") + current_info.long_key;
+      help += "--";
+      help += current_info.long_key;
 
       if (type_name != typeid(bool).name()) {
         help += "=<" + output_type_name + ">";
@@ -103,22 +107,24 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
   ArgumentBuilder* argument = argument_builders_[help_index_];
   ArgumentInformation current_info = argument->GetInfo();
   help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
-  help += std::string("--") + current_info.long_key + ":  " + "Display this help and exit";
+  help += "--";
+  help += current_info.long_key;
+  help += ":  Display this help and exit";
   help += "\n";
 
   return help;
 }
 
 ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(char short_name,
-                                                                                  const char* long_name,
-                                                                                  const char* description) {
+                                                                                  const std::string_view& long_name,
+                                                                                  const std::string& description) {
   ConcreteArgumentBuilder<bool>* help_argument_ = &AddArgument<bool>(short_name, long_name, description);
   help_index_ = argument_builders_.size() - 1;
   return *help_argument_;
 }
 
-ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const char* long_name,
-                                                                                  const char* description) {
+ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const std::string_view& long_name,
+                                                                                  const std::string& description) {
   return AddHelp(kBadChar, long_name, description);
 }
 
@@ -155,8 +161,8 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
       for (const std::string& long_key : long_keys) {
         bool was_found = false;
 
-        for (const std::string& type_name : allowed_typenames_) {
-          std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(type_name);
+        for (const std::string_view& type_name : allowed_typenames_) {
+          std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
 
           if (t_arguments->find(long_key) != t_arguments->end()) {
             was_found = true;
@@ -186,21 +192,23 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
 }
 
 std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) const {
-  std::vector<std::string> long_keys = {current_argument.substr(2)};
+  std::string one_long_key = current_argument.substr(2);
 
-  if (long_keys[0].find('=') != std::string::npos) {
-    long_keys[0] = long_keys[0].substr(0, long_keys[0].find('='));
+  if (one_long_key.find('=') != std::string::npos) {
+    one_long_key = one_long_key.substr(0, one_long_key.find('='));
   }
 
-  if (current_argument[1] != '-') {
-    long_keys.clear();
+  std::vector<std::string> long_keys;
 
+  if (current_argument[1] != '-') {
     for (size_t current_key_index = 1;
          current_key_index < current_argument.size() &&
              short_to_long_names_.find(current_argument[current_key_index]) != short_to_long_names_.end();
          ++current_key_index) {
-      long_keys.push_back(short_to_long_names_.at(current_argument[current_key_index]));
+      long_keys.emplace_back(short_to_long_names_.at(current_argument[current_key_index]));
     }
+  } else {
+    long_keys.push_back(one_long_key);
   }
 
   return long_keys;

@@ -5,14 +5,16 @@
 Она была написана как лабораторная работа в курсе "Основы программирования на C++" в программе ITMO SE.
 С заданием можно ознакомиться [здесь](./TASK.md).
 
-В библиотеке определен парсинг стандартных примитивов, таких как `int`, `float`, `char*` и т.д.
+В библиотеке определен парсинг стандартных примитивов, таких как `int`, `float`, `char` и т.д., а также
+парсинг `std::string`.
 Есть возможность добавлять логику парсинга для иных типов документов (см. [пример](./bin/main.cpp)).
 
 Документация библиотеки находится [во вложенной папке](./lib/argparser/docs/README.md).
 
 ## Использование в проекте
 
-Более подробно об использовании ArgParser можно прочитать на странице [пользовательской документации](./lib/argparser/docs/ArgParser.md).
+Более подробно об использовании ArgParser можно прочитать на странице
+[пользовательской документации](./lib/argparser/docs/ArgParser.md).
 
 ### CMake
 
@@ -25,7 +27,7 @@ FetchContent_MakeAvailable(argparser)
 target_link_libraries(MyTarget PUBLIC argparser)
 ```
 
-Можно использовать конкретную ветку разработки, тег версии или коммит:
+Можно использовать конкретную ветку, тег версии или коммит:
 
 ```cmake
 FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgParser GIT_TAG dev)
@@ -37,7 +39,24 @@ FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgPars
 
 ## Пример использования и добавления аргумента
 
+Для добавления пользовательского типа аргумента `Type`, он должен удовлетворять следующим требованиям:
+
+* Иметь конструктор без параметров и конструктор копирования
+* Иметь оператор присваивания с копированием
+* Должен быть определен оператор `std::ostream& operator<<(std::ostream& os, const Type& t)`
+* Должна быть определена функция получения значения из `std::string`: 
+  `ArgumentParser::NonMemberParsingResult<Type> ParseType(const std::string&)`
+
+Тогда для добавления аргумента можно использовать макрос: 
+`AddArgumentType(Type, ParseType)`.
+
+При вызове конструктора класса `ArgParser` должен быть передан аргумент типа 
+`ArgumentTypes<Args...>`, где `Args...` - типы добавленных аргументов.
+Это можно сделать удобно при помощи макроса `PassArgumentTypes(Args...)`.
+В вышеприведенном примере следует передать `PassArgumentTypes(Type)`.
+
 CMakeLists.txt:
+
 ```cmake
 cmake_minimum_required(VERSION 3.28)
 project(TestArgParser)
@@ -96,14 +115,19 @@ ArgumentParser::NonMemberParsingResult<Action> ParseAction(const std::string& ac
   return result;
 }
 
-AddArgumentType(Action, ParseAction);
+AddArgumentType(Action, ParseAction)
+
+void InitializeParser(ArgumentParser::ArgParser& parser) {
+  std::string action_alias = "Action";
+  std::string action_description = "Action type";
+  parser.SetAliasForType<Action>(action_alias);
+  parser.AddArgument<Action>('a', "action", action_description);
+  parser.AddHelp('h', "help", "Program accumulate arguments");
+}
 
 int main(int argc, char *argv[]) {
   ArgumentParser::ArgParser parser("TestArgParser", PassArgumentTypes(Action));
-  parser.SetAliasForType<Action>("Action");
-  parser.AddHelp('h', "help", "This program is an ArgParser FetchContent example.");
-  parser.AddArgument<Action>('a', "action", "action type");
-  parser.AddFlag('t', "test", "test argument");
+  InitializeParser(parser);
   bool result = parser.Parse(argc, argv, {std::cerr, true});
 
   if (!result) {

@@ -18,12 +18,15 @@ template<ProperArgumentType T>
 class ConcreteArgument : public Argument {
  public:
   ConcreteArgument() = delete;
-  ConcreteArgument(const ArgumentInformation& info, T default_value, T* stored_value, std::vector<T>* stored_values);
+  ConcreteArgument(const ArgumentInformation& info,
+                   const T& default_value,
+                   T* stored_value,
+                   std::vector<T>* stored_values);
   [[nodiscard]] T GetValue(size_t index) const;
   std::vector<size_t> ValidateArgument(const std::vector<std::string>& argv, size_t position) override;
   bool CheckLimit() override;
   [[nodiscard]] ArgumentParsingStatus GetValueStatus() const override;
-  [[nodiscard]] const std::string& GetType() const override;
+  [[nodiscard]] const std::string_view& GetType() const override;
   [[nodiscard]] const ArgumentInformation& GetInfo() const override;
   [[nodiscard]] size_t GetUsedValues() const override;
   void ClearStored() override;
@@ -43,7 +46,7 @@ class ConcreteArgument : public Argument {
 
 template<ProperArgumentType T>
 ConcreteArgument<T>::ConcreteArgument(const ArgumentInformation& info,
-                                      T default_value,
+                                      const T& default_value,
                                       T* stored_value,
                                       std::vector<T>* stored_values) {
   info_ = info;
@@ -70,7 +73,7 @@ ArgumentParsingStatus ConcreteArgument<T>::GetValueStatus() const {
 }
 
 template<ProperArgumentType T>
-const std::string& ConcreteArgument<T>::GetType() const {
+const std::string_view& ConcreteArgument<T>::GetType() const {
   return info_.type;
 }
 

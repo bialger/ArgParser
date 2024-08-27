@@ -41,17 +41,25 @@ ArgumentParser::NonMemberParsingResult<Action> ParseAction(const std::string& ac
   return result;
 }
 
-AddArgumentType(Action, ParseAction);
+AddArgumentType(Action, ParseAction)
+
+void InitializeParser(ArgumentParser::ArgParser& parser, std::vector<int>& values, Action& action) {
+  std::string action_alias = "Action";
+  std::string action_description = "Action type";
+  parser.SetAliasForType<Action>(action_alias);
+  parser.AddIntArgument("N").MultiValue(1).Positional().StoreValues(values);
+  parser.AddArgument<Action>('a', "action", action_description).StoreValue(action);
+  parser.AddHelp('h', "help", "Program accumulate arguments");
+}
 
 int main(int argc, char** argv) {
   std::vector<int> values;
   Action action{};
+  auto* program_name = new std::string("Program");
+  ArgumentParser::ArgParser parser(*program_name, PassArgumentTypes(Action));
+  delete program_name;
 
-  ArgumentParser::ArgParser parser("Program", PassArgumentTypes(Action));
-  parser.SetAliasForType<Action>("Action");
-  parser.AddIntArgument("N").MultiValue(1).Positional().StoreValues(values);
-  parser.AddArgument<Action>('a', "action", "Action type").StoreValue(action);
-  parser.AddHelp('h', "help", "Program accumulate arguments");
+  InitializeParser(parser, values, action);
 
   if (!parser.Parse(argc, argv, {std::cout, true})) {
     std::cout << "Wrong argument" << std::endl;
