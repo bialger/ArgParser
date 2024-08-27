@@ -92,7 +92,7 @@ class ArgParser {
   std::vector<std::string_view> allowed_typenames_;
   std::vector<std::string> allowed_typenames_for_help_;
   std::map<std::string_view, std::map<std::string_view, size_t>> arguments_by_type_;
-  std::map<char, std::string> short_to_long_names_;
+  std::map<char, std::string_view> short_to_long_names_;
   size_t help_index_;
 
   bool Parse_(const std::vector<std::string>& args, ConditionalOutput error_output);
@@ -101,7 +101,7 @@ class ArgParser {
 
   void ParsePositionalArguments(const std::vector<std::string>& argv, const std::vector<size_t>& used_positions);
 
-  bool HandleErrors(ConditionalOutput error_output) const;
+  [[nodiscard]] bool HandleErrors(ConditionalOutput error_output) const;
 
   void RefreshArguments();
 

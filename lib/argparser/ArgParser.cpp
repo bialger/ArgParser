@@ -192,21 +192,23 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
 }
 
 std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) const {
-  std::vector<std::string> long_keys = {current_argument.substr(2)};
+  std::string one_long_key = current_argument.substr(2);
 
-  if (long_keys[0].find('=') != std::string::npos) {
-    long_keys[0] = long_keys[0].substr(0, long_keys[0].find('='));
+  if (one_long_key.find('=') != std::string::npos) {
+    one_long_key = one_long_key.substr(0, one_long_key.find('='));
   }
 
-  if (current_argument[1] != '-') {
-    long_keys.clear();
+  std::vector<std::string> long_keys;
 
+  if (current_argument[1] != '-') {
     for (size_t current_key_index = 1;
          current_key_index < current_argument.size() &&
              short_to_long_names_.find(current_argument[current_key_index]) != short_to_long_names_.end();
          ++current_key_index) {
-      long_keys.push_back(short_to_long_names_.at(current_argument[current_key_index]));
+      long_keys.emplace_back(short_to_long_names_.at(current_argument[current_key_index]));
     }
+  } else {
+    long_keys.push_back(one_long_key);
   }
 
   return long_keys;
