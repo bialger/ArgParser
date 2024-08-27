@@ -37,13 +37,14 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
     return {};
   }
 
-  std::string help = name_;
+  std::string help;
+  help += name_;
   help += "\n";
   help += argument_builders_[help_index_]->GetInfo().description;
   help += "\n\nOPTIONS:\n";
 
   for (size_t i = 0; i < allowed_typenames_.size(); ++i) {
-    std::string type_name = allowed_typenames_[i];
+    std::string_view type_name = allowed_typenames_[i];
     std::string output_type_name = allowed_typenames_for_help_[i];
 
     for (const auto& iterator : arguments_by_type_.at(type_name)) {
@@ -115,15 +116,15 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
 }
 
 ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(char short_name,
-                                                                                  const char* long_name,
-                                                                                  const char* description) {
+                                                                                  const std::string_view& long_name,
+                                                                                  const std::string& description) {
   ConcreteArgumentBuilder<bool>* help_argument_ = &AddArgument<bool>(short_name, long_name, description);
   help_index_ = argument_builders_.size() - 1;
   return *help_argument_;
 }
 
-ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const char* long_name,
-                                                                                  const char* description) {
+ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const std::string_view& long_name,
+                                                                                  const std::string& description) {
   return AddHelp(kBadChar, long_name, description);
 }
 
@@ -160,8 +161,8 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
       for (const std::string& long_key : long_keys) {
         bool was_found = false;
 
-        for (const std::string& type_name : allowed_typenames_) {
-          std::map<std::string, size_t>* t_arguments = &arguments_by_type_.at(type_name);
+        for (const std::string_view& type_name : allowed_typenames_) {
+          std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
 
           if (t_arguments->find(long_key) != t_arguments->end()) {
             was_found = true;

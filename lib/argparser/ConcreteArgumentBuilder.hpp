@@ -14,7 +14,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
  public:
   ConcreteArgumentBuilder() = delete;
 
-  ConcreteArgumentBuilder(char short_name, const char* long_name, const char* description) {
+  ConcreteArgumentBuilder(char short_name, const std::string_view& long_name, const std::string& description) {
     info_ = ArgumentInformation();
     info_.short_key = short_name;
     info_.long_key = long_name;
