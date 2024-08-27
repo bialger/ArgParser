@@ -30,7 +30,7 @@ struct ArgumentTypes {
 class ArgParser {
  public:
   template<ProperArgumentType ... Args>
-  explicit ArgParser(const std::string_view& name = "", ArgumentTypes<Args ...> types = {});
+  explicit ArgParser(const std::string& name = "", ArgumentTypes<Args ...> types = {});
 
   ArgParser(const ArgParser& other) = delete;
   ArgParser& operator=(const ArgParser& other) = delete;
@@ -86,7 +86,7 @@ class ArgParser {
   ALIAS_TEMPLATE_FUNCTION(GetCompositeValue, GetValue<CompositeString>);
 
  private:
-  std::string_view name_;
+  std::string name_;
   std::vector<ArgumentBuilder*> argument_builders_;
   std::vector<Argument*> arguments_;
   std::vector<std::string_view> allowed_typenames_;
@@ -113,7 +113,7 @@ class ArgParser {
 };
 
 template<ProperArgumentType... Args>
-ArgumentParser::ArgParser::ArgParser(const std::string_view& name, ArgumentTypes<Args ...> types) {
+ArgumentParser::ArgParser::ArgParser(const std::string& name, ArgumentTypes<Args ...> types) {
   name_ = name;
   allowed_typenames_ =
       {typeid(std::string).name(), typeid(CompositeString).name(), typeid(int16_t).name(), typeid(int32_t).name(),
