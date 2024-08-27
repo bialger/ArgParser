@@ -13,7 +13,7 @@
 
 ## Использование в проекте
 
-Более подробно об использовании ArgParser можно прочитать на странице 
+Более подробно об использовании ArgParser можно прочитать на странице
 [пользовательской документации](./lib/argparser/docs/ArgParser.md).
 
 ### CMake
@@ -38,6 +38,22 @@ FetchContent_Declare(argparser GIT_REPOSITORY https://github.com/bialger/ArgPars
 ```
 
 ## Пример использования и добавления аргумента
+
+Для добавления пользовательского типа аргумента `Type`, он должен удовлетворять следующим требованиям:
+
+* Иметь конструктор без параметров и конструктор копирования
+* Иметь оператор присваивания с копированием
+* Должен быть определен оператор `std::ostream& operator<<(std::ostream& os, const Type& t)`
+* Должна быть определена функция получения значения из `std::string`: 
+  `ArgumentParser::NonMemberParsingResult<Type> ParseType(const std::string&)`
+
+Тогда для добавления аргумента можно использовать макрос: 
+`AddArgumentType(Type, ParseType)`.
+
+При вызове конструктора класса `ArgParser` должен быть передан аргумент типа 
+`ArgumentTypes<Args...>`, где `Args...` - типы добавленных аргументов.
+Это можно сделать удобно при помощи макроса `PassArgumentTypes(Args...)`.
+В вышеприведенном примере следует передать `PassArgumentTypes(Type)`.
 
 CMakeLists.txt:
 
