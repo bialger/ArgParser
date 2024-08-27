@@ -12,6 +12,7 @@ inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(
 #include <string_view>
 #include <typeinfo>
 #include <map>
+#include <ranges>
 
 #include "ConcreteArgumentBuilder.hpp"
 #include "ConcreteArgument.hpp"
@@ -19,110 +20,120 @@ inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(
 #include "lib/argparser/basic/BasicFunctions.hpp"
 
 namespace ArgumentParser {
-
 template<ProperArgumentType ... Args>
 struct ArgumentTypes {
   static std::vector<std::string_view> GetTypenames() {
-    return {typeid(Args).name() ...};
+    return {typeid(Args).name()...};
   }
 };
 
 class ArgParser {
- public:
-  template<ProperArgumentType ... Args>
-  explicit ArgParser(const std::string& name = "", ArgumentTypes<Args ...> types = {});
+  public:
+    template<ProperArgumentType ... Args>
+    explicit ArgParser(const std::string& name = "", ArgumentTypes<Args...> types = {});
 
-  ArgParser(const ArgParser& other) = delete;
-  ArgParser& operator=(const ArgParser& other) = delete;
-  ~ArgParser();
+    ArgParser(const ArgParser& other) = delete;
+    ArgParser& operator=(const ArgParser& other) = delete;
+    ~ArgParser();
 
-  bool Parse(const std::vector<std::string>& args, ConditionalOutput error_output = {});
-  bool Parse(int argc, char** argv, ConditionalOutput error_output = {});
+    bool Parse(const std::vector<std::string>& args, ConditionalOutput error_output = {});
+    bool Parse(int argc, char** argv, ConditionalOutput error_output = {});
 
-  [[nodiscard]] bool Help() const;
-  [[nodiscard]] std::string HelpDescription() const;
+    [[nodiscard]] bool Help() const;
+    [[nodiscard]] std::string HelpDescription() const;
 
-  ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const std::string_view& long_name, const std::string& description = "");
-  ConcreteArgumentBuilder<bool>& AddHelp(const std::string_view& long_name, const std::string& description);
+    ConcreteArgumentBuilder<bool>& AddHelp(char short_name,
+                                           const std::string_view& long_name,
+                                           const std::string& description = "");
+    ConcreteArgumentBuilder<bool>& AddHelp(const std::string_view& long_name, const std::string& description);
 
-  template<ProperArgumentType T>
-  ConcreteArgumentBuilder<T>& AddArgument(char short_name, const std::string_view& long_name, const std::string& description = "");
+    template<ProperArgumentType T>
+    ConcreteArgumentBuilder<T>& AddArgument(char short_name,
+                                            const std::string_view& long_name,
+                                            const std::string& description = "");
 
-  template<ProperArgumentType T>
-  ConcreteArgumentBuilder<T>& AddArgument(const std::string_view& long_name, const std::string& description = "");
+    template<ProperArgumentType T>
+    ConcreteArgumentBuilder<T>& AddArgument(const std::string_view& long_name, const std::string& description = "");
 
-  template<ProperArgumentType T>
-  T GetValue(const std::string_view& long_name, size_t index = 0) const;
+    template<ProperArgumentType T>
+    T GetValue(const std::string_view& long_name, size_t index = 0) const;
 
-  template<ProperArgumentType T>
-  void SetAliasForType(const std::string& alias);
+    template<ProperArgumentType T>
+    void SetAliasForType(const std::string& alias);
 
-  ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddIntArgument, AddArgument<int32_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddLongLongArgument, AddArgument<int64_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddUnsignedShortArgument, AddArgument<uint16_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddUnsignedIntArgument, AddArgument<uint32_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddUnsignedLongLongArgument, AddArgument<uint64_t>);
-  ALIAS_TEMPLATE_FUNCTION(AddFloatArgument, AddArgument<float>);
-  ALIAS_TEMPLATE_FUNCTION(AddDoubleArgument, AddArgument<double>);
-  ALIAS_TEMPLATE_FUNCTION(AddLongDoubleArgument, AddArgument<long double>);
-  ALIAS_TEMPLATE_FUNCTION(AddFlag, AddArgument<bool>);
-  ALIAS_TEMPLATE_FUNCTION(AddCharArgument, AddArgument<char>);
-  ALIAS_TEMPLATE_FUNCTION(AddStringArgument, AddArgument<std::string>);
-  ALIAS_TEMPLATE_FUNCTION(AddCompositeArgument, AddArgument<CompositeString>);
+    ALIAS_TEMPLATE_FUNCTION(AddShortArgument, AddArgument<int16_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddIntArgument, AddArgument<int32_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddLongLongArgument, AddArgument<int64_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddUnsignedShortArgument, AddArgument<uint16_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddUnsignedIntArgument, AddArgument<uint32_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddUnsignedLongLongArgument, AddArgument<uint64_t>);
+    ALIAS_TEMPLATE_FUNCTION(AddFloatArgument, AddArgument<float>);
+    ALIAS_TEMPLATE_FUNCTION(AddDoubleArgument, AddArgument<double>);
+    ALIAS_TEMPLATE_FUNCTION(AddLongDoubleArgument, AddArgument<long double>);
+    ALIAS_TEMPLATE_FUNCTION(AddFlag, AddArgument<bool>);
+    ALIAS_TEMPLATE_FUNCTION(AddCharArgument, AddArgument<char>);
+    ALIAS_TEMPLATE_FUNCTION(AddStringArgument, AddArgument<std::string>);
+    ALIAS_TEMPLATE_FUNCTION(AddCompositeArgument, AddArgument<CompositeString>);
 
-  ALIAS_TEMPLATE_FUNCTION(GetShortValue, GetValue<int16_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetIntValue, GetValue<int32_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetLongLongValue, GetValue<int64_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetUnsignedShortValue, GetValue<uint16_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetUnsignedIntValue, GetValue<uint32_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetUnsignedLongLongValue, GetValue<uint64_t>);
-  ALIAS_TEMPLATE_FUNCTION(GetFloatValue, GetValue<float>);
-  ALIAS_TEMPLATE_FUNCTION(GetDoubleValue, GetValue<double>);
-  ALIAS_TEMPLATE_FUNCTION(GetLongDoubleValue, GetValue<long double>);
-  ALIAS_TEMPLATE_FUNCTION(GetFlag, GetValue<bool>);
-  ALIAS_TEMPLATE_FUNCTION(GetChar, GetValue<char>);
-  ALIAS_TEMPLATE_FUNCTION(GetStringValue, GetValue<std::string>);
-  ALIAS_TEMPLATE_FUNCTION(GetCompositeValue, GetValue<CompositeString>);
+    ALIAS_TEMPLATE_FUNCTION(GetShortValue, GetValue<int16_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetIntValue, GetValue<int32_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetLongLongValue, GetValue<int64_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetUnsignedShortValue, GetValue<uint16_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetUnsignedIntValue, GetValue<uint32_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetUnsignedLongLongValue, GetValue<uint64_t>);
+    ALIAS_TEMPLATE_FUNCTION(GetFloatValue, GetValue<float>);
+    ALIAS_TEMPLATE_FUNCTION(GetDoubleValue, GetValue<double>);
+    ALIAS_TEMPLATE_FUNCTION(GetLongDoubleValue, GetValue<long double>);
+    ALIAS_TEMPLATE_FUNCTION(GetFlag, GetValue<bool>);
+    ALIAS_TEMPLATE_FUNCTION(GetChar, GetValue<char>);
+    ALIAS_TEMPLATE_FUNCTION(GetStringValue, GetValue<std::string>);
+    ALIAS_TEMPLATE_FUNCTION(GetCompositeValue, GetValue<CompositeString>);
 
- private:
-  std::string name_;
-  std::vector<ArgumentBuilder*> argument_builders_;
-  std::vector<Argument*> arguments_;
-  std::vector<std::string_view> allowed_typenames_;
-  std::vector<std::string> allowed_typenames_for_help_;
-  std::map<std::string_view, std::map<std::string_view, size_t>> arguments_by_type_;
-  std::map<char, std::string_view> short_to_long_names_;
-  size_t help_index_;
+  private:
+    std::string name_;
+    std::vector<ArgumentBuilder*> argument_builders_;
+    std::vector<Argument*> arguments_;
+    std::vector<std::string_view> allowed_typenames_;
+    std::vector<std::string> allowed_typenames_for_help_;
+    std::map<std::string_view, std::map<std::string_view, size_t> > arguments_by_type_;
+    std::map<char, std::string_view> short_to_long_names_;
+    size_t help_index_;
 
-  bool Parse_(const std::vector<std::string>& args, ConditionalOutput error_output);
+    bool Parse_(const std::vector<std::string>& args, ConditionalOutput error_output);
 
-  [[nodiscard]] std::vector<std::string> GetLongKeys(const std::string& current_argument) const;
+    [[nodiscard]] std::vector<std::string> GetLongKeys(const std::string& current_argument) const;
 
-  void ParsePositionalArguments(const std::vector<std::string>& argv, const std::vector<size_t>& used_positions);
+    void ParsePositionalArguments(const std::vector<std::string>& argv,
+                                  const std::vector<size_t>& used_positions) const;
 
-  [[nodiscard]] bool HandleErrors(ConditionalOutput error_output) const;
+    [[nodiscard]] bool HandleErrors(ConditionalOutput error_output) const;
 
-  void RefreshArguments();
+    void RefreshArguments();
 
-  template<ProperArgumentType T>
-  ConcreteArgumentBuilder<T>& AddArgument_(char short_name, const std::string_view& long_name, const std::string& description);
+    template<ProperArgumentType T>
+    ConcreteArgumentBuilder<T>& AddArgument_(char short_name,
+                                             const std::string_view& long_name,
+                                             const std::string& description);
 
-  template<ProperArgumentType T>
-  T GetValue_(const std::string_view& long_name, size_t index) const;
+    template<ProperArgumentType T>
+    T GetValue_(const std::string_view& long_name, size_t index) const;
 };
 
 template<ProperArgumentType... Args>
-ArgumentParser::ArgParser::ArgParser(const std::string& name, ArgumentTypes<Args ...> types) {
+ArgParser::ArgParser(const std::string& name, ArgumentTypes<Args...> types) {
   name_ = name;
   allowed_typenames_ =
-      {typeid(std::string).name(), typeid(CompositeString).name(), typeid(int16_t).name(), typeid(int32_t).name(),
-       typeid(int64_t).name(), typeid(uint16_t).name(), typeid(uint32_t).name(), typeid(uint64_t).name(),
-       typeid(float).name(), typeid(double).name(), typeid(long double).name(), typeid(bool).name(),
-       typeid(char).name()};
+  {
+    typeid(std::string).name(), typeid(CompositeString).name(), typeid(int16_t).name(), typeid(int32_t).name(),
+    typeid(int64_t).name(), typeid(uint16_t).name(), typeid(uint32_t).name(), typeid(uint64_t).name(),
+    typeid(float).name(), typeid(double).name(), typeid(long double).name(), typeid(bool).name(),
+    typeid(char).name()
+  };
   allowed_typenames_for_help_ =
-      {"string", "CompositeString", "short", "int", "long long", "unsigned short", "unsigned int", "unsigned long long",
-       "float", "double", "long double", "bool", "char"};
+  {
+    "string", "CompositeString", "short", "int", "long long", "unsigned short", "unsigned int", "unsigned long long",
+    "float", "double", "long double", "bool", "char"
+  };
 
   for (const std::string_view& type_name : types.GetTypenames()) {
     allowed_typenames_.emplace_back(type_name);
@@ -142,7 +153,9 @@ ArgumentParser::ArgParser::ArgParser(const std::string& name, ArgumentTypes<Args
 }
 
 template<ProperArgumentType T>
-ConcreteArgumentBuilder<T>& ArgParser::AddArgument(char short_name, const std::string_view& long_name, const std::string& description) {
+ConcreteArgumentBuilder<T>& ArgParser::AddArgument(char short_name,
+                                                   const std::string_view& long_name,
+                                                   const std::string& description) {
   return AddArgument_<T>(short_name, long_name, description);
 }
 
@@ -157,7 +170,9 @@ T ArgParser::GetValue(const std::string_view& long_name, size_t index) const {
 }
 
 template<ProperArgumentType T>
-ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const std::string_view& long_name, const std::string& description) {
+ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name,
+                                                    const std::string_view& long_name,
+                                                    const std::string& description) {
   std::map<std::string_view, size_t>& t_arguments = arguments_by_type_.at(typeid(T).name());
 
   if (short_name != kBadChar) {
@@ -174,19 +189,20 @@ ConcreteArgumentBuilder<T>& ArgParser::AddArgument_(char short_name, const std::
 template<ProperArgumentType T>
 T ArgParser::GetValue_(const std::string_view& long_name, size_t index) const {
   const std::map<std::string_view, size_t>& t_arguments = arguments_by_type_.at(typeid(T).name());
-  size_t argument_index = t_arguments.at(long_name);
-  auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
+  const size_t argument_index = t_arguments.at(long_name);
+  const auto* argument = static_cast<ConcreteArgument<T>*>(arguments_.at(argument_index));
   return argument->GetValue(index);
 }
 
 template<ProperArgumentType T>
 void ArgumentParser::ArgParser::SetAliasForType(const std::string& alias) {
-  auto it = std::find(allowed_typenames_.begin(), allowed_typenames_.end(), typeid(T).name());
+  const auto it = std::ranges::find(allowed_typenames_, typeid(T).name());
+
   if (it == allowed_typenames_.end()) {
     return;
   }
 
-  auto output_it = allowed_typenames_for_help_.begin() + (it - allowed_typenames_.begin());
+  const auto output_it = allowed_typenames_for_help_.begin() + (it - allowed_typenames_.begin());
   auto alias_end_it = alias.begin();
 
   while (alias_end_it != alias.end()) {
@@ -215,7 +231,6 @@ static_assert(ProperArgumentType<bool>);
 static_assert(ProperArgumentType<char>);
 static_assert(ProperArgumentType<std::string>);
 static_assert(ProperArgumentType<CompositeString>);
-
 } // namespace ArgumentParser
 
 #endif // ARGPARSER_HPP_
