@@ -43,7 +43,7 @@
 
 ```cpp
 template<ProperArgumentType ... Args>
-ArgParser(const char* name = "", ArgumentTypes<Args ...> types = {});
+ArgParser(const std::string& name = "", ArgumentTypes<Args ...> types = {});
 ```
 
 Удален конструктор копирования (как и оператор присваивания)
@@ -120,27 +120,27 @@ OPTIONS:
 
 ```cpp
 template<ProperArgumentType T>
-[[nodiscard]] T GetValue(const char* long_name, size_t index = 0) const;
+[[nodiscard]] T GetValue(const std::string_view& long_name, size_t index = 0) const;
 ```
 
 ### AddArgument<T\>
 
 Шаблонная функция, возвращающая ссылку на экземпляр класса
 [ConcreteArgumentBuilder<T\>](ConcreteArgumentBuilder.md), который будет строить
-аргумент с переданными параметрами. Принимает `char` значение короткого ключа,
-*constant C-style string* значение длинного ключа и, опционально, *constant C-style
-string* описание ключа (по умолчанию - пустая строка).
+аргумент с переданными параметрами. 
+Принимает `char` значение короткого ключа, `std::string_view` значение длинного ключа 
+и, опционально, `std::string` описание ключа (по умолчанию - пустая строка).
 
 ```cpp
 template<ProperArgumentType T>
-ConcreteArgumentBuilder<T>& AddArgument(char short_name, const char* long_name, const char* description = "");
+ConcreteArgumentBuilder<T>& AddArgument(char short_name, const std::string_view& long_name, const std::string& description = "");
 ```
 
 Эта перегрузка не принимает никакого значения короткого ключа.
 
 ```cpp
 template<ProperArgumentType T>
-ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* description = "");
+ConcreteArgumentBuilder<T>& AddArgument(const std::string_view& long_name, const std::string& description = "");
 ```
 
 ### AddFlag, AddShortArgument, ... AddStringArgument, AddCompositeArgument
@@ -154,13 +154,13 @@ ConcreteArgumentBuilder<T>& AddArgument(const char* long_name, const char* descr
 результат и запоминающая аргумент помощи.
 
 ```cpp
-ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const char* long_name, const char* description = "");
+ConcreteArgumentBuilder<bool>& AddHelp(char short_name, const std::string_view& long_name, const std::string& description = "");
 ```
 
 Эта перегрузка не принимает никакого значения короткого ключа.
 
 ```cpp
-ConcreteArgumentBuilder<bool>& AddHelp(const char* long_name, const char* description);
+ConcreteArgumentBuilder<bool>& AddHelp(const std::string_view& long_name, const std::string& description);
 ```
 
 ### SetAliasForType<T\>
