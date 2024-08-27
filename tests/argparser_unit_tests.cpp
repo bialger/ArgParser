@@ -156,6 +156,36 @@ TEST_F(ArgParserUnitTestSuite, HelpStringTest) {
   );
 }
 
+TEST_F(ArgParserUnitTestSuite, HelpStringTestWithTemporaryStrings) {
+  auto* program_name = new std::string("My Parser");
+  auto* program_description = new std::string("Some Description about program");
+  ArgParser parser(*program_name);
+  parser.AddHelp('h', "help", *program_description);
+  parser.AddStringArgument('i', "input", "File path for input file").MultiValue(1);
+  parser.AddFlag('s', "flag1", "Use some logic").Default(true);
+  parser.AddFlag('p', "flag2", "Use some logic");
+  parser.AddIntArgument("number", "Some Number");
+
+  delete program_name;
+  delete program_description;
+
+  ASSERT_TRUE(parser.Parse(SplitString("app --help")));
+
+  ASSERT_EQ(
+      parser.HelpDescription(),
+      "My Parser\n"
+      "Some Description about program\n"
+      "\n"
+      "OPTIONS:\n"
+      "-i,  --input=<string>:  File path for input file [repeated, min args = 1]\n"
+      "     --number=<int>:  Some Number\n"
+      "-s,  --flag1:  Use some logic [default = true]\n"
+      "-p,  --flag2:  Use some logic\n"
+      "\n"
+      "-h,  --help:  Display this help and exit\n"
+  );
+}
+
 TEST_F(ArgParserUnitTestSuite, CompositeStringTest) {
   ArgParser parser("My Parser");
   parser.AddHelp('h', "help", "Some Description about program");
@@ -234,4 +264,17 @@ TEST_F(ArgParserUnitTestSuite, RepeatedParsingTest) {
 
   ASSERT_TRUE(parser.Parse(SplitString("app --number 2 -s -i " + kTemporaryFileName + " -o="
                                            + kTemporaryDirectoryName + " --test=" + kTemporaryFileName)));
+}
+
+TEST_F(ArgParserUnitTestSuite, NonMemberParsingTest) {
+  ArgumentParser::ArgParser parser("My Parser", PassArgumentTypes(Action));
+  parser.SetAliasForType<Action>("Action");
+  parser.AddHelp('h', "help", "Some Description about program");
+  parser.AddArgument<Action>('a', "action", "action type");
+  parser.AddFlag('t', "test", "test argument");
+
+  ASSERT_TRUE(parser.Parse(SplitString("app --action sum -t")));
+  ASSERT_FALSE(parser.Help());
+  ASSERT_TRUE(parser.GetFlag("test"));
+  ASSERT_TRUE(parser.GetValue<Action>("action") == Action::kSum);
 }
