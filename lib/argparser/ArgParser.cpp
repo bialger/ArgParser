@@ -27,7 +27,9 @@ bool ArgumentParser::ArgParser::Help() const {
     return false;
   }
 
-  return GetValue<bool>(arguments_[help_index_]->GetInfo().long_key);
+  auto* help_argument = dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_]);
+
+  return help_argument->GetValue(0);
 }
 
 std::string ArgumentParser::ArgParser::HelpDescription() const {
@@ -52,7 +54,8 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
       ArgumentBuilder* argument = argument_builders_[iterator.second];
       ArgumentInformation current_info = argument->GetInfo();
       help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
-      help += std::string("--") + current_info.long_key;
+      help += "--";
+      help += current_info.long_key;
 
       if (type_name != typeid(bool).name()) {
         help += "=<" + output_type_name + ">";
@@ -103,7 +106,9 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
   ArgumentBuilder* argument = argument_builders_[help_index_];
   ArgumentInformation current_info = argument->GetInfo();
   help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
-  help += std::string("--") + current_info.long_key + ":  " + "Display this help and exit";
+  help += "--";
+  help += current_info.long_key;
+  help += ":  Display this help and exit";
   help += "\n";
 
   return help;
