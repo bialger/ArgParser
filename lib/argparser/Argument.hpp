@@ -29,7 +29,7 @@ enum class ArgumentParsingStatus {
   kSuccess
 };
 
-/** \n This structure represents a single information.
+/** \n This structure represents a single information unit.
  * Contains all required parameters for all argument types. */
 
 struct ArgumentInformation {

@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "ArgParser.hpp"
 
 ArgumentParser::ArgParser::~ArgParser() {
@@ -17,7 +15,7 @@ bool ArgumentParser::ArgParser::Parse(const std::vector<std::string>& args, Cond
 }
 
 bool ArgumentParser::ArgParser::Parse(int argc, char** argv, ConditionalOutput error_output) {
-  std::vector<std::string> args = std::vector<std::string>(argv, argv + argc);
+  const auto args = std::vector<std::string>(argv, argv + argc);
 
   return Parse_(args, error_output);
 }
@@ -27,7 +25,7 @@ bool ArgumentParser::ArgParser::Help() const {
     return false;
   }
 
-  auto* help_argument = dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_]);
+  const auto* help_argument = dynamic_cast<ConcreteArgument<bool>*>(arguments_[help_index_]);
 
   return help_argument->GetValue(0);
 }
@@ -47,55 +45,57 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
     std::string_view type_name = allowed_typenames_[i];
     std::string output_type_name = allowed_typenames_for_help_[i];
 
-    for (const auto& iterator : arguments_by_type_.at(type_name)) {
-      if (iterator.second == help_index_) {
+    for (const auto& index : arguments_by_type_.at(type_name) | std::views::values) {
+      if (index == help_index_) {
         continue;
       }
 
-      ArgumentBuilder* argument = argument_builders_[iterator.second];
-      ArgumentInformation current_info = argument->GetInfo();
-      help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
+      ArgumentBuilder* argument = argument_builders_[index];
+      auto [short_key, long_key, description, type, minimum_values, is_multi_value, is_positional, has_store_values,
+        has_store_value, has_default, validate, is_good] = argument->GetInfo();
+      help += short_key == kBadChar ? "     " : std::string("-") + short_key + ",  ";
       help += "--";
-      help += current_info.long_key;
+      help += long_key;
 
       if (type_name != typeid(bool).name()) {
         help += "=<" + output_type_name + ">";
       }
 
       help += ":  ";
-      help += current_info.description;
+      help += description;
 
-      if (current_info.is_multi_value ||
-          current_info.is_positional ||
-          (current_info.has_default && type_name == typeid(bool).name() && argument->GetDefaultValue() != "0") ||
-          (current_info.has_default && type_name != typeid(bool).name()) ||
-          (current_info.minimum_values != 0 && current_info.is_multi_value)) {
-        help += " [";
-        if (current_info.is_multi_value) {
-          help += "repeated, ";
+      help += " [";
+      if (is_multi_value) {
+        help += "repeated, ";
+      }
+
+      if (is_positional) {
+        help += "positional, ";
+      }
+
+      if (has_default && (type_name != typeid(bool).name() || argument->GetDefaultValue() != "0")) {
+        help += "default = ";
+
+        if (type_name == typeid(bool).name()) {
+          help += (argument->GetDefaultValue() == "0") ? "false" : "true";
+        } else {
+          help += argument->GetDefaultValue();
         }
 
-        if (current_info.is_positional) {
-          help += "positional, ";
-        }
+        help += ", ";
+      }
 
-        if (current_info.has_default) {
-          help += "default = ";
+      if (minimum_values != 0 && is_multi_value) {
+        help += "min args = " + std::to_string(minimum_values);
+      }
 
-          if (type_name == typeid(bool).name()) {
-            help += (argument->GetDefaultValue() == "0") ? "false" : "true";
-          } else {
-            help += argument->GetDefaultValue();
-          }
+      bool was_extended = help.back() != '[';
 
-          help += ", ";
-        }
-
-        if (current_info.minimum_values != 0) {
-          help += "min args = " + std::to_string(current_info.minimum_values) + ", ";
-        }
-
+      if (!was_extended || help.back() == ' ') {
         help = help.substr(0, help.size() - 2);
+      }
+
+      if (was_extended) {
         help += "]";
       }
 
@@ -105,10 +105,11 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
 
   help += "\n";
   ArgumentBuilder* argument = argument_builders_[help_index_];
-  ArgumentInformation current_info = argument->GetInfo();
-  help += current_info.short_key == kBadChar ? "     " : std::string("-") + current_info.short_key + ",  ";
+  auto [short_key, long_key, description, type, minimum_values, is_multi_value, is_positional, has_store_values,
+    has_store_value, has_default, validate, is_good] = argument->GetInfo();
+  help += short_key == kBadChar ? "     " : std::string("-") + short_key + ",  ";
   help += "--";
-  help += current_info.long_key;
+  help += long_key;
   help += ":  Display this help and exit";
   help += "\n";
 
@@ -124,7 +125,7 @@ ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHel
 }
 
 ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(const std::string_view& long_name,
-                                                                                  const std::string& description) {
+  const std::string& description) {
   return AddHelp(kBadChar, long_name, description);
 }
 
@@ -151,25 +152,26 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
         return false;
       }
 
-      std::vector<std::string> long_keys = GetLongKeys(argv[position]);
+      std::vector<std::string_view> long_keys = GetLongKeys(argv[position]);
 
       if (long_keys.empty()) {
         DisplayError("Used nonexistent argument: " + argv[position] + "\n", error_output);
         return false;
       }
 
-      for (const std::string& long_key : long_keys) {
+      for (const std::string_view& long_key : long_keys) {
         bool was_found = false;
 
         for (const std::string_view& type_name : allowed_typenames_) {
-          std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
+          const std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
 
-          if (t_arguments->find(long_key) != t_arguments->end()) {
+          if (t_arguments->contains(long_key)) {
             was_found = true;
             std::vector<size_t> current_used_positions =
                 arguments_[t_arguments->at(long_key)]->ValidateArgument(argv, position);
             position = (current_used_positions.empty()) ? position : current_used_positions.back();
-            used_positions.insert(std::end(used_positions), std::begin(current_used_positions),
+            used_positions.insert(std::end(used_positions),
+                                  std::begin(current_used_positions),
                                   std::end(current_used_positions));
           }
 
@@ -191,31 +193,34 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
   return HandleErrors(error_output);
 }
 
-std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) const {
-  std::string one_long_key = current_argument.substr(2);
+std::vector<std::string_view> ArgumentParser::ArgParser::GetLongKeys(const std::string_view& current_argument) const {
+  std::string_view one_long_key = current_argument.substr(2);
+  std::string_view result_key;
 
   if (one_long_key.find('=') != std::string::npos) {
-    one_long_key = one_long_key.substr(0, one_long_key.find('='));
+    result_key = one_long_key.substr(0, one_long_key.find('='));
+  } else {
+    result_key = one_long_key;
   }
 
-  std::vector<std::string> long_keys;
+  std::vector<std::string_view> long_keys;
 
   if (current_argument[1] != '-') {
     for (size_t current_key_index = 1;
          current_key_index < current_argument.size() &&
-             short_to_long_names_.find(current_argument[current_key_index]) != short_to_long_names_.end();
+         short_to_long_names_.contains(current_argument[current_key_index]);
          ++current_key_index) {
       long_keys.emplace_back(short_to_long_names_.at(current_argument[current_key_index]));
     }
   } else {
-    long_keys.push_back(one_long_key);
+    long_keys.push_back(result_key);
   }
 
   return long_keys;
 }
 
 void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::string>& argv,
-                                                         const std::vector<size_t>& used_positions) {
+                                                         const std::vector<size_t>& used_positions) const {
   std::vector<std::string> positional_args = {};
   std::vector<size_t> positional_indices = {};
 
@@ -226,16 +231,15 @@ void ArgumentParser::ArgParser::ParsePositionalArguments(const std::vector<std::
   }
 
   for (size_t i = 0; i < argv.size(); ++i) {
-    if (std::find(std::begin(used_positions), std::end(used_positions), i) ==
-        std::end(used_positions)) {
+    if (std::ranges::find(used_positions, i) == std::end(used_positions)) {
       positional_args.push_back(argv[i]);
     }
   }
 
   for (size_t position = 0, argument_index = 0;
        position < positional_args.size() &&
-           argument_index < positional_indices.size() &&
-           positional_args[position] != "--";
+       argument_index < positional_indices.size() &&
+       positional_args[position] != "--";
        ++position, ++argument_index) {
     std::vector<size_t> current_used_positions =
         arguments_[positional_indices[argument_index]]->ValidateArgument(positional_args, position);

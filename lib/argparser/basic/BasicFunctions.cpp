@@ -73,11 +73,11 @@ bool ArgumentParser::IsValidFilename(std::string& pre_filename) {
 
   /* This Windows-specific check is important because different code pages can
    * corrupt non-alphanumeric filenames, but UNIX-like systems (like macOS or
-   * Linux) handle unicode correctly. */
+   * Linux) handle Unicode correctly. */
 
   for (uint64_t position = 0; position < pre_filename.size() - 1; ++position) {
-    char current = pre_filename[position];
-    char next = pre_filename[position + 1];
+    const char current = pre_filename[position];
+    const char next = pre_filename[position + 1];
 
     if ((current == '\\' || current == '/') && next == current) {
       return false;

@@ -7,7 +7,6 @@
 
 #include "ConditionalOutput.hpp"
 
-
 #if defined _WIN32 || defined _WIN64 || defined __CYGWIN__
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -30,7 +29,7 @@ void SetRedColor();
 
 void ResetColor();
 
-/**\n This function prints a error message. */
+/**\n This function prints an error message. */
 
 void DisplayError(const std::string& message, ConditionalOutput error_output);
 

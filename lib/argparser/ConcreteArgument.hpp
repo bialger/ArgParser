@@ -1,8 +1,6 @@
 #ifndef CONCRETEARGUMENT_HPP_
 #define CONCRETEARGUMENT_HPP_
 
-#include <limits>
-
 #include "Argument.hpp"
 #include "ArgParserConcepts.hpp"
 
@@ -15,7 +13,7 @@ struct NonMemberParsingResult {
 };
 
 template<ProperArgumentType T>
-class ConcreteArgument : public Argument {
+class ConcreteArgument final : public Argument {
  public:
   ConcreteArgument() = delete;
   ConcreteArgument(const ArgumentInformation& info,
@@ -124,11 +122,11 @@ std::vector<size_t> ConcreteArgument<T>::ValidateArgument(const std::vector<std:
     used_positions.push_back(position);
 
     if (argv[position][0] == '-') {
-      size_t equals_index = argv[position].find('=');
+      const size_t equals_index = argv[position].find('=');
 
       if (equals_index != std::string::npos) {
         value_string = argv[position].substr(equals_index + 1);
-      } else if (std::is_same<T, bool>::value) {
+      } else if (std::is_same_v<T, bool>) {
         value_string = "true";
       } else {
         ++position;

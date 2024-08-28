@@ -10,7 +10,7 @@
 namespace ArgumentParser {
 
 template<ProperArgumentType T>
-class ConcreteArgumentBuilder : public ArgumentBuilder {
+class ConcreteArgumentBuilder final : public ArgumentBuilder {
  public:
   ConcreteArgumentBuilder() = delete;
 
@@ -76,7 +76,7 @@ class ConcreteArgumentBuilder : public ArgumentBuilder {
   }
 
   Argument* build() override {
-    if (std::is_same<T, bool>::value && !info_.has_default) {
+    if (std::is_same_v<T, bool> && !info_.has_default) {
       info_.has_default = true;
     }
 

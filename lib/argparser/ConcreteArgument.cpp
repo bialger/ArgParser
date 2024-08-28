@@ -1,3 +1,5 @@
+#include <limits>
+
 #include "ConcreteArgument.hpp"
 
 template<>
@@ -5,10 +7,10 @@ size_t ArgumentParser::ConcreteArgument<int16_t>::ObtainValue(const std::vector<
                                                                      std::string& value_string,
                                                                      std::vector<size_t>& used_values,
                                                                      size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
+  const int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<int16_t>::min() || pre_value >= std::numeric_limits<int16_t>::max()) &&
@@ -27,10 +29,10 @@ size_t ArgumentParser::ConcreteArgument<int32_t>::ObtainValue(const std::vector<
                                                                      std::string& value_string,
                                                                      std::vector<size_t>& used_values,
                                                                      size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
+  const int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<int32_t>::min() || pre_value >= std::numeric_limits<int32_t>::max()) &&
@@ -49,10 +51,10 @@ size_t ArgumentParser::ConcreteArgument<int64_t>::ObtainValue(const std::vector<
                                                                      std::string& value_string,
                                                                      std::vector<size_t>& used_values,
                                                                      size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
+  const int64_t pre_value = std::strtoll(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<int64_t>::min() || pre_value >= std::numeric_limits<int64_t>::max()) &&
@@ -71,10 +73,10 @@ size_t ArgumentParser::ConcreteArgument<uint16_t>::ObtainValue(const std::vector
                                                                       std::string& value_string,
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
+  const uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<uint16_t>::min() || pre_value >= std::numeric_limits<uint16_t>::max()) &&
@@ -93,10 +95,10 @@ size_t ArgumentParser::ConcreteArgument<uint32_t>::ObtainValue(const std::vector
                                                                       std::string& value_string,
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
+  const uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<uint32_t>::min() || pre_value >= std::numeric_limits<uint32_t>::max()) &&
@@ -115,10 +117,10 @@ size_t ArgumentParser::ConcreteArgument<uint64_t>::ObtainValue(const std::vector
                                                                       std::string& value_string,
                                                                       std::vector<size_t>& used_values,
                                                                       size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
+  const uint64_t pre_value = std::strtoull(value_string.c_str(), &end, 0);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<uint64_t>::min() || pre_value >= std::numeric_limits<uint64_t>::max()) &&
@@ -137,10 +139,10 @@ size_t ArgumentParser::ConcreteArgument<float>::ObtainValue(const std::vector<st
                                                                    std::string& value_string,
                                                                    std::vector<size_t>& used_values,
                                                                    size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  float pre_value = std::strtof(value_string.c_str(), &end);
+  const float pre_value = std::strtof(value_string.c_str(), &end);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<float>::min() || pre_value >= std::numeric_limits<float>::max()) &&
@@ -159,10 +161,10 @@ size_t ArgumentParser::ConcreteArgument<double>::ObtainValue(const std::vector<s
                                                                     std::string& value_string,
                                                                     std::vector<size_t>& used_values,
                                                                     size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  double pre_value = std::strtod(value_string.c_str(), &end);
+  const double pre_value = std::strtod(value_string.c_str(), &end);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<double>::min() || pre_value >= std::numeric_limits<double>::max()) &&
@@ -181,10 +183,10 @@ size_t ArgumentParser::ConcreteArgument<long double>::ObtainValue(const std::vec
                                                                          std::string& value_string,
                                                                          std::vector<size_t>& used_values,
                                                                          size_t position) {
-  int32_t save_errno = errno;
+  const int32_t save_errno = errno;
   errno = 0;
   char* end;
-  long double pre_value = std::strtold(value_string.c_str(), &end);
+  const long double pre_value = std::strtold(value_string.c_str(), &end);
 
   if (end == value_string.c_str() || *end != '\0' ||
       ((pre_value <= std::numeric_limits<long double>::min() || pre_value >= std::numeric_limits<long double>::max()) &&
@@ -280,10 +282,10 @@ size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std
     }
     case 'x': {
       value_string[0] = '0';
-      int32_t save_errno = errno;
+      const int32_t save_errno = errno;
       errno = 0;
       char* end;
-      int64_t pre_value = std::strtoll(value_string.c_str(), &end, 16);
+      const int64_t pre_value = std::strtoll(value_string.c_str(), &end, 16);
 
       if (end == value_string.c_str() || *end != '\0' ||
           ((pre_value <= std::numeric_limits<char>::min() || pre_value >= std::numeric_limits<char>::max()) &&
@@ -299,10 +301,10 @@ size_t ArgumentParser::ConcreteArgument<char>::ObtainValue(const std::vector<std
     default: {
       if (value_string[1] >= '0' && value_string[1] <= '9') {
         value_string[0] = '0';
-        int32_t save_errno = errno;
+        const int32_t save_errno = errno;
         errno = 0;
         char* end;
-        int64_t pre_value = std::strtoll(value_string.c_str(), &end, 8);
+        const int64_t pre_value = std::strtoll(value_string.c_str(), &end, 8);
 
         if (end == value_string.c_str() || *end != '\0' ||
             ((pre_value <= std::numeric_limits<char>::min() || pre_value >= std::numeric_limits<char>::max()) &&
@@ -372,9 +374,8 @@ size_t ArgumentParser::ConcreteArgument<CompositeString>::ObtainValue(const std:
   if (info_.validate(value_string) && info_.is_good(value_string)) {
     value_ = value_string;
     position = current;
-    size_t start_position = used_values.back();
 
-    for (size_t i = start_position; i <= current; ++i) {
+    for (size_t i = used_values.back(); i <= current; ++i) {
       used_values.push_back(i);
     }
   } else {

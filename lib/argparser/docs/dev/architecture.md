@@ -1,6 +1,6 @@
 # Архитектура продукта
 
-В этом документе описывается архитектура продукта - парсера аргументов командной 
+В этом документе описывается архитектура продукта — парсера аргументов командной 
 строки, разработанная на основании [требований](requirements.md).
 
 ## Системная архитектура
@@ -20,7 +20,7 @@ flowchart TB
 ## Архитектура подсистем
 
 * Исходя из вышеуказанного предполагаемого использования продукта, весь продукт 
-  представляет собой одну подсистему - библиотеку argparser, которая должна обрабатывать
+  представляет собой одну подсистему — библиотеку argparser, которая должна обрабатывать
   данные аргументы командной строки.
 
 ### Архитектура подсистемы "ArgParser"
@@ -59,7 +59,7 @@ classDiagram
         +GetValue~T~(string_view long_name, size_t index=0) T
         +SeSetAliasForType~T~(string alias) void
         -Parse_(vector~string~ args, ConditionalOutput error_output) bool
-        -GetLongKeys(string current_argument) vector~string~
+        -GetLongKeys(string_view current_argument) vector~string_view~
         -ParsePositionalArguments(vector~string~ argv, const vector~size_t~ & used_positions) void
         -HandleErrors(ConditionalOutput error_output) bool
         -RefreshArguments() void
@@ -182,5 +182,5 @@ classDiagram
 функции возврата статуса парсинга и возврата информации об аргументе, а также функцию 
 получения значения аргумента из аргументов командной строки. Необходимая информация, 
 не изменяемая в процессе парсинга, должна храниться в виде экземпляра структуры. 
-На данный момент планируется аргументы всех базовых значащих типов (кроме 8-битных 
+На данный момент реализованы аргументы всех базовых значащих типов (кроме 8-битных 
 чисел), StringArgument и ComplexArgument (строка с валидацией и чтением пробелов).
