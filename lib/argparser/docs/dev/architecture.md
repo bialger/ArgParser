@@ -59,7 +59,7 @@ classDiagram
         +GetValue~T~(string_view long_name, size_t index=0) T
         +SeSetAliasForType~T~(string alias) void
         -Parse_(vector~string~ args, ConditionalOutput error_output) bool
-        -GetLongKeys(string current_argument) vector~string~
+        -GetLongKeys(string_view current_argument) vector~string_view~
         -ParsePositionalArguments(vector~string~ argv, const vector~size_t~ & used_positions) void
         -HandleErrors(ConditionalOutput error_output) bool
         -RefreshArguments() void
