@@ -117,8 +117,8 @@ std::string ArgumentParser::ArgParser::HelpDescription() const {
 }
 
 ArgumentParser::ConcreteArgumentBuilder<bool>& ArgumentParser::ArgParser::AddHelp(char short_name,
-  const std::string_view& long_name,
-  const std::string& description) {
+                                                                                  const std::string_view& long_name,
+                                                                                  const std::string& description) {
   ConcreteArgumentBuilder<bool>* help_argument_ = &AddArgument<bool>(short_name, long_name, description);
   help_index_ = argument_builders_.size() - 1;
   return *help_argument_;
@@ -152,18 +152,18 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
         return false;
       }
 
-      std::vector<std::string> long_keys = GetLongKeys(argv[position]);
+      std::vector<std::string_view> long_keys = GetLongKeys(argv[position]);
 
       if (long_keys.empty()) {
         DisplayError("Used nonexistent argument: " + argv[position] + "\n", error_output);
         return false;
       }
 
-      for (const std::string& long_key : long_keys) {
+      for (const std::string_view& long_key : long_keys) {
         bool was_found = false;
 
         for (const std::string_view& type_name : allowed_typenames_) {
-          std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
+          const std::map<std::string_view, size_t>* t_arguments = &arguments_by_type_.at(type_name);
 
           if (t_arguments->contains(long_key)) {
             was_found = true;
@@ -193,14 +193,17 @@ bool ArgumentParser::ArgParser::Parse_(const std::vector<std::string>& args, Con
   return HandleErrors(error_output);
 }
 
-std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::string& current_argument) const {
-  std::string one_long_key = current_argument.substr(2);
+std::vector<std::string_view> ArgumentParser::ArgParser::GetLongKeys(const std::string_view& current_argument) const {
+  std::string_view one_long_key = current_argument.substr(2);
+  std::string_view result_key;
 
   if (one_long_key.find('=') != std::string::npos) {
-    one_long_key = one_long_key.substr(0, one_long_key.find('='));
+    result_key = one_long_key.substr(0, one_long_key.find('='));
+  } else {
+    result_key = one_long_key;
   }
 
-  std::vector<std::string> long_keys;
+  std::vector<std::string_view> long_keys;
 
   if (current_argument[1] != '-') {
     for (size_t current_key_index = 1;
@@ -210,7 +213,7 @@ std::vector<std::string> ArgumentParser::ArgParser::GetLongKeys(const std::strin
       long_keys.emplace_back(short_to_long_names_.at(current_argument[current_key_index]));
     }
   } else {
-    long_keys.push_back(one_long_key);
+    long_keys.push_back(result_key);
   }
 
   return long_keys;

@@ -101,7 +101,7 @@ class ArgParser {
 
     bool Parse_(const std::vector<std::string>& args, ConditionalOutput error_output);
 
-    [[nodiscard]] std::vector<std::string> GetLongKeys(const std::string& current_argument) const;
+    [[nodiscard]] std::vector<std::string_view> GetLongKeys(const std::string_view& current_argument) const;
 
     void ParsePositionalArguments(const std::vector<std::string>& argv,
                                   const std::vector<size_t>& used_positions) const;
